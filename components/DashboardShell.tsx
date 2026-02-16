@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useState, useEffect, useRef } from 'react';
-import { Home, BarChart2, Settings, User, Bell, LogOut, Zap } from 'lucide-react';
+import { Home, BarChart2, Settings, User, Bell, LogOut, BatteryCharging } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -54,8 +54,8 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                 style={{ width: sidebarWidth }}
             >
                 <div className="p-6">
-                    <Link href="/"><h1 className="text-2xl font-bold text-blue-500 flex items-center gap-2 overflow-hidden whitespace-nowrap">
-                        <Zap className="fill-current shrink-0" /> Smart Bee
+                    <Link href="/"><h1 className="text-2xl font-bold text-white  flex items-center gap-2 overflow-hidden whitespace-nowrap">
+                        <BatteryCharging className="fill-current shrink-0" /> PowerWise
                     </h1></Link>
                 </div>
                 <nav className="mt-6 px-4 space-y-2 flex-1 overflow-hidden">

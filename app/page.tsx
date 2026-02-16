@@ -5,6 +5,11 @@ import { DashboardShell } from '@/components/DashboardShell';
 import { StatCard } from '@/components/StatCard';
 import { EnergyChart } from '@/components/EnergyChart';
 import { RecentActivity } from '@/components/RecentActivity';
+import { CostPredictedChart } from '@/components/CostPredictedChart';
+import { CostChangeChart } from '@/components/CostChangeChart';
+import { UsageEstimateChart } from '@/components/UsageEstimateChart';
+import { ActiveAppliancesChart } from '@/components/ActiveAppliancesChart';
+import { EnergyIntensityChart } from '@/components/EnergyIntensityChart';
 
 export default function Home() {
   return (
@@ -52,6 +57,19 @@ export default function Home() {
         <div>
           <RecentActivity />
         </div>
+      </div>
+
+      {/* Detailed Analytics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+        <CostPredictedChart />
+        <CostChangeChart />
+        <UsageEstimateChart />
+      </div>
+
+      {/* Appliance & Intensity Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <ActiveAppliancesChart />
+        <EnergyIntensityChart />
       </div>
     </DashboardShell>
   );
