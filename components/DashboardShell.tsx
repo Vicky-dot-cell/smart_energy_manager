@@ -54,9 +54,9 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                 style={{ width: sidebarWidth }}
             >
                 <div className="p-6">
-                    <h1 className="text-2xl font-bold text-blue-500 flex items-center gap-2 overflow-hidden whitespace-nowrap">
+                    <Link href="/"><h1 className="text-2xl font-bold text-blue-500 flex items-center gap-2 overflow-hidden whitespace-nowrap">
                         <Zap className="fill-current shrink-0" /> Smart Bee
-                    </h1>
+                    </h1></Link>
                 </div>
                 <nav className="mt-6 px-4 space-y-2 flex-1 overflow-hidden">
                     {navItems.map((item) => {
