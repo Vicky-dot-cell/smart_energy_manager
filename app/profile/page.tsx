@@ -1,9 +1,38 @@
 'use client';
 
 import { DashboardShell } from '@/components/DashboardShell';
-import { User, Mail, Phone, MapPin, Camera } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Camera, Save, X, Edit2 } from 'lucide-react';
+import { useState } from 'react';
 
 export default function ProfilePage() {
+    const [isEditing, setIsEditing] = useState(false);
+    const [user, setUser] = useState({
+        name: 'John Doe',
+        role: 'Admin',
+        email: 'john.doe@example.com',
+        phone: '+1 (555) 123-4567',
+        location: 'San Francisco, CA'
+    });
+    const [tempUser, setTempUser] = useState(user);
+
+    const handleEdit = () => {
+        setTempUser(user);
+        setIsEditing(true);
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+    };
+
+    const handleSave = () => {
+        setUser(tempUser);
+        setIsEditing(false);
+    };
+
+    const handleChange = (field: string, value: string) => {
+        setTempUser(prev => ({ ...prev, [field]: value }));
+    };
+
     return (
         <DashboardShell>
             <div className="mb-8">
@@ -26,30 +55,99 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                                 <div className="ml-6 mb-1">
-                                    <h2 className="text-2xl font-bold text-gray-100">John Doe</h2>
-                                    <p className="text-gray-400">Admin</p>
+                                    {isEditing ? (
+                                        <div className="flex flex-col gap-2">
+                                            <input
+                                                type="text"
+                                                value={tempUser.name}
+                                                onChange={(e) => handleChange('name', e.target.value)}
+                                                className="bg-neutral-800 border border-neutral-700 text-white text-xl font-bold rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={tempUser.role}
+                                                onChange={(e) => handleChange('role', e.target.value)}
+                                                className="bg-neutral-800 border border-neutral-700 text-gray-400 text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-32"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <h2 className="text-2xl font-bold text-gray-100">{user.name}</h2>
+                                            <p className="text-gray-400">{user.role}</p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                Edit Profile
-                            </button>
+
+                            <div className="flex gap-3">
+                                {isEditing ? (
+                                    <>
+                                        <button
+                                            onClick={handleCancel}
+                                            className="bg-neutral-800 hover:bg-neutral-700 text-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                                        >
+                                            <X size={16} /> Cancel
+                                        </button>
+                                        <button
+                                            onClick={handleSave}
+                                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                                        >
+                                            <Save size={16} /> Save Changes
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        onClick={handleEdit}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                                    >
+                                        <Edit2 size={16} /> Edit Profile
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-6">
                                 <h3 className="text-lg font-semibold text-gray-100 border-b border-neutral-800 pb-2">Contact Information</h3>
                                 <div className="space-y-4">
-                                    <div className="flex items-center gap-3 text-gray-300">
-                                        <Mail size={18} className="text-gray-500" />
-                                        <span>john.doe@example.com</span>
+                                    <div className="flex items-center gap-3 text-gray-300 h-10">
+                                        <Mail size={18} className="text-gray-500 shrink-0" />
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                value={tempUser.email}
+                                                onChange={(e) => handleChange('email', e.target.value)}
+                                                className="bg-neutral-800 border border-neutral-700 text-white text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-full"
+                                            />
+                                        ) : (
+                                            <span>{user.email}</span>
+                                        )}
                                     </div>
-                                    <div className="flex items-center gap-3 text-gray-300">
-                                        <Phone size={18} className="text-gray-500" />
-                                        <span>+1 (555) 123-4567</span>
+                                    <div className="flex items-center gap-3 text-gray-300 h-10">
+                                        <Phone size={18} className="text-gray-500 shrink-0" />
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                value={tempUser.phone}
+                                                onChange={(e) => handleChange('phone', e.target.value)}
+                                                className="bg-neutral-800 border border-neutral-700 text-white text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-full"
+                                            />
+                                        ) : (
+                                            <span>{user.phone}</span>
+                                        )}
                                     </div>
-                                    <div className="flex items-center gap-3 text-gray-300">
-                                        <MapPin size={18} className="text-gray-500" />
-                                        <span>San Francisco, CA</span>
+                                    <div className="flex items-center gap-3 text-gray-300 h-10">
+                                        <MapPin size={18} className="text-gray-500 shrink-0" />
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                value={tempUser.location}
+                                                onChange={(e) => handleChange('location', e.target.value)}
+                                                className="bg-neutral-800 border border-neutral-700 text-white text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-full"
+                                            />
+                                        ) : (
+                                            <span>{user.location}</span>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +161,7 @@ export default function ProfilePage() {
                                     </div>
                                     <div className="p-4 bg-neutral-950 rounded-lg border border-neutral-800">
                                         <p className="text-sm text-gray-500">Last Login</p>
-                                        <p className="text-lg font-semibold text-gray-200">2 mins ago</p>
+                                        <p className="text-lg font-semibold text-gray-200">Just now</p>
                                     </div>
                                 </div>
                             </div>

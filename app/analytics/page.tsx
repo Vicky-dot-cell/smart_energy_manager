@@ -2,6 +2,7 @@
 
 import { DashboardShell } from '@/components/DashboardShell';
 import { EnergyChart } from '@/components/EnergyChart';
+import { PeakUsageChart } from '@/components/Analytics/PeakUsageChart';
 
 export default function AnalyticsPage() {
     return (
@@ -17,9 +18,7 @@ export default function AnalyticsPage() {
                     <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-neutral-800">
                         <h3 className="text-lg font-semibold text-gray-100 mb-6">Peak Usage Hours</h3>
                         {/* Placeholder for another chart or data visualization */}
-                        <div className="h-[300px] flex items-center justify-center text-gray-500 border-2 border-dashed border-neutral-800 rounded-lg">
-                            Peak Usage Chart Placeholder
-                        </div>
+                        <PeakUsageChart />
                     </div>
                 </div>
 
