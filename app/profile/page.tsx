@@ -40,7 +40,7 @@ export default function ProfilePage() {
                 <p className="text-gray-400">Manage your personal information.</p>
             </div>
 
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto relative z-10">
                 <div className="bg-neutral-900 rounded-xl shadow-sm border border-neutral-800 overflow-hidden">
                     {/* Cover Image */}
                     <div className="h-32 bg-gradient-to-r from-blue-600 to-purple-600"></div>
@@ -55,54 +55,18 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                                 <div className="ml-6 mb-1">
-                                    {isEditing ? (
-                                        <div className="flex flex-col gap-2">
-                                            <input
-                                                type="text"
-                                                value={tempUser.name}
-                                                onChange={(e) => handleChange('name', e.target.value)}
-                                                className="bg-neutral-800 border border-neutral-700 text-white text-xl font-bold rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none"
-                                            />
-                                            <input
-                                                type="text"
-                                                value={tempUser.role}
-                                                onChange={(e) => handleChange('role', e.target.value)}
-                                                className="bg-neutral-800 border border-neutral-700 text-gray-400 text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-32"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <h2 className="text-2xl font-bold text-gray-100">{user.name}</h2>
-                                            <p className="text-gray-400">{user.role}</p>
-                                        </>
-                                    )}
+                                    <h2 className="text-2xl font-bold text-gray-100">{user.name}</h2>
+                                    <p className="text-gray-400">{user.role}</p>
                                 </div>
                             </div>
 
                             <div className="flex gap-3">
-                                {isEditing ? (
-                                    <>
-                                        <button
-                                            onClick={handleCancel}
-                                            className="bg-neutral-800 hover:bg-neutral-700 text-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-                                        >
-                                            <X size={16} /> Cancel
-                                        </button>
-                                        <button
-                                            onClick={handleSave}
-                                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-                                        >
-                                            <Save size={16} /> Save Changes
-                                        </button>
-                                    </>
-                                ) : (
-                                    <button
-                                        onClick={handleEdit}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-                                    >
-                                        <Edit2 size={16} /> Edit Profile
-                                    </button>
-                                )}
+                                <button
+                                    onClick={handleEdit}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                                >
+                                    <Edit2 size={16} /> Edit Profile
+                                </button>
                             </div>
                         </div>
 
@@ -112,42 +76,15 @@ export default function ProfilePage() {
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3 text-gray-300 h-10">
                                         <Mail size={18} className="text-gray-500 shrink-0" />
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={tempUser.email}
-                                                onChange={(e) => handleChange('email', e.target.value)}
-                                                className="bg-neutral-800 border border-neutral-700 text-white text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-full"
-                                            />
-                                        ) : (
-                                            <span>{user.email}</span>
-                                        )}
+                                        <span>{user.email}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-gray-300 h-10">
                                         <Phone size={18} className="text-gray-500 shrink-0" />
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={tempUser.phone}
-                                                onChange={(e) => handleChange('phone', e.target.value)}
-                                                className="bg-neutral-800 border border-neutral-700 text-white text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-full"
-                                            />
-                                        ) : (
-                                            <span>{user.phone}</span>
-                                        )}
+                                        <span>{user.phone}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-gray-300 h-10">
                                         <MapPin size={18} className="text-gray-500 shrink-0" />
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={tempUser.location}
-                                                onChange={(e) => handleChange('location', e.target.value)}
-                                                className="bg-neutral-800 border border-neutral-700 text-white text-sm rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none w-full"
-                                            />
-                                        ) : (
-                                            <span>{user.location}</span>
-                                        )}
+                                        <span>{user.location}</span>
                                     </div>
                                 </div>
                             </div>
@@ -169,6 +106,81 @@ export default function ProfilePage() {
                     </div>
                 </div>
             </div>
+
+            {/* Edit Profile Modal Content */}
+            {isEditing && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-md shadow-2xl">
+                        <div className="flex justify-between items-center p-6 border-b border-neutral-800">
+                            <h2 className="text-xl font-bold text-white">Edit Profile</h2>
+                            <button onClick={handleCancel} className="text-gray-400 hover:text-white transition-colors">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
+                                <input
+                                    type="text"
+                                    value={tempUser.name}
+                                    onChange={(e) => handleChange('name', e.target.value)}
+                                    className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-1">Role</label>
+                                <input
+                                    type="text"
+                                    value={tempUser.role}
+                                    onChange={(e) => handleChange('role', e.target.value)}
+                                    className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
+                                <input
+                                    type="email"
+                                    value={tempUser.email}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-1">Phone</label>
+                                <input
+                                    type="text"
+                                    value={tempUser.phone}
+                                    onChange={(e) => handleChange('phone', e.target.value)}
+                                    className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-1">Location</label>
+                                <input
+                                    type="text"
+                                    value={tempUser.location}
+                                    onChange={(e) => handleChange('location', e.target.value)}
+                                    className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all"
+                                />
+                            </div>
+                        </div>
+                        <div className="p-6 border-t border-neutral-800 flex justify-end gap-3 bg-neutral-900/50 rounded-b-2xl">
+                            <button
+                                onClick={handleCancel}
+                                className="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-neutral-800 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg shadow-blue-900/20"
+                            >
+                                <Save size={16} /> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </DashboardShell>
     );
 }
