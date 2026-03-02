@@ -1,17 +1,16 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-    { time: '00:00', usage: 0.5 }, { time: '02:00', usage: 0.4 },
-    { time: '04:00', usage: 0.3 }, { time: '06:00', usage: 1.2 },
-    { time: '08:00', usage: 2.5 }, { time: '10:00', usage: 1.8 },
-    { time: '12:00', usage: 1.5 }, { time: '14:00', usage: 2.1 },
-    { time: '16:00', usage: 1.9 }, { time: '18:00', usage: 3.5 }, // Peak
-    { time: '20:00', usage: 3.2 }, { time: '22:00', usage: 2.0 },
-];
+import { api, type PeakPoint } from '@/lib/api';
 
 export function PeakUsageChart() {
+    const [data, setData] = useState<PeakPoint[]>([]);
+
+    useEffect(() => {
+        api.analytics().then(res => setData(res.peakUsageHours)).catch(console.error);
+    }, []);
+
     return (
         <div className="w-full h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -23,20 +22,8 @@ export function PeakUsageChart() {
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                    <XAxis
-                        dataKey="time"
-                        stroke="#666"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                    />
-                    <YAxis
-                        stroke="#666"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(value) => `${value} kW`}
-                    />
+                    <XAxis dataKey="time" stroke="#666" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#666" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `${v} kW`} />
                     <Tooltip
                         contentStyle={{ backgroundColor: '#171717', border: '1px solid #262626', borderRadius: '8px', color: '#fff' }}
                         itemStyle={{ color: '#fbbf24' }}

@@ -1,15 +1,20 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList, ResponsiveContainer, Cell } from 'recharts';
 import { TrendingUp } from 'lucide-react';
-
-const data = [
-    { name: 'Jan', cost: 203 },
-    { name: 'Feb', cost: 214 },
-];
+import { api, type CostChangeItem } from '@/lib/api';
 
 export function CostChangeChart() {
-    const percentageChange = ((data[1].cost - data[0].cost) / data[0].cost) * 100;
+    const [data, setData] = useState<CostChangeItem[]>([]);
+
+    useEffect(() => {
+        api.costChange().then(setData).catch(console.error);
+    }, []);
+
+    const percentageChange = data.length === 2
+        ? ((data[1].cost - data[0].cost) / data[0].cost) * 100
+        : 0;
 
     return (
         <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-neutral-800 flex flex-col h-[300px]">
@@ -22,7 +27,7 @@ export function CostChangeChart() {
                             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#a3a3a3' }} />
                             <YAxis hide />
                             <Bar dataKey="cost" radius={[4, 4, 0, 0]} maxBarSize={50}>
-                                {data.map((entry, index) => (
+                                {data.map((_, index) => (
                                     <Cell key={`cell-${index}`} fill={index === 1 ? '#2dd4bf' : '#4b5563'} />
                                 ))}
                                 <LabelList dataKey="cost" position="top" fill="#fff" formatter={(val: any) => `$${val}`} />

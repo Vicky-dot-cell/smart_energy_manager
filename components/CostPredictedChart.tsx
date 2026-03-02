@@ -1,13 +1,16 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-
-const data = [
-    { name: 'Electricity', value: 160, color: '#2dd4bf' }, // Teal-400
-    { name: 'Gas', value: 54, color: '#facc15' },         // Yellow-400
-];
+import { api, type CostPredItem } from '@/lib/api';
 
 export function CostPredictedChart() {
+    const [data, setData] = useState<CostPredItem[]>([]);
+
+    useEffect(() => {
+        api.costPredicted().then(setData).catch(console.error);
+    }, []);
+
     const totalCost = data.reduce((a, b) => a + b.value, 0);
 
     return (
@@ -15,9 +18,8 @@ export function CostPredictedChart() {
             <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Cost Predicted</h3>
 
             <div className="flex-1 w-full min-h-0 relative flex items-center justify-center">
-                {/* Center Text */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-4 lg:pb-0 z-10">
-                    <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold ">Total</span>
+                    <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold">Total</span>
                     <span className="text-3xl font-bold text-white mt-1 pb-5">${totalCost}</span>
                 </div>
 

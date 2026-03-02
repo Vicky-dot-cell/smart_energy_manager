@@ -1,13 +1,14 @@
+import { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle2, Zap } from 'lucide-react';
-
-const activities = [
-    { id: 1, type: 'alert', message: 'Voltage spike detected', time: '2 mins ago' },
-    { id: 2, type: 'success', message: 'System optimization complete', time: '1 hour ago' },
-    { id: 3, type: 'info', message: 'Daily report generated', time: '3 hours ago' },
-    { id: 4, type: 'alert', message: 'High consumption alert', time: '5 hours ago' },
-];
+import { api, type ActivityItem } from '@/lib/api';
 
 export function RecentActivity() {
+    const [activities, setActivities] = useState<ActivityItem[]>([]);
+
+    useEffect(() => {
+        api.recentActivity().then(setActivities).catch(console.error);
+    }, []);
+
     return (
         <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-neutral-800">
             <h3 className="text-lg font-semibold text-gray-100 mb-6">Recent Activity</h3>

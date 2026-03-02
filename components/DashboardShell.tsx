@@ -5,6 +5,7 @@ import { Home, BarChart2, Settings, User, Bell, LogOut, BatteryCharging, DollarS
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { api, type Notification as ApiNotification, type Profile } from '@/lib/api';
 
 export function DashboardShell({ children }: { children: ReactNode }) {
     const pathname = usePathname();
@@ -16,11 +17,13 @@ export function DashboardShell({ children }: { children: ReactNode }) {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
     const [selectedNotificationId, setSelectedNotificationId] = useState<number | null>(null);
-    const [notifications, setNotifications] = useState([
-        { id: 1, title: 'High Energy Usage', desc: 'Usage spiked by 15% yesterday.', time: '2 mins ago', unread: true },
-        { id: 2, title: 'Bill Generated', desc: 'January bill is ready for payment.', time: '1 hour ago', unread: true },
-        { id: 3, title: 'Maintenance Alert', desc: 'Scheduled maintenance tmrw at 2 AM.', time: '5 hours ago', unread: false },
-    ]);
+    const [notifications, setNotifications] = useState<ApiNotification[]>([]);
+    const [profile, setProfile] = useState<Profile | null>(null);
+
+    useEffect(() => {
+        api.notifications().then(setNotifications).catch(console.error);
+        api.profile().then(setProfile).catch(console.error);
+    }, []);
 
     const markAsRead = (id: number) => {
         setNotifications(notifications.map(n => n.id === id ? { ...n, unread: false } : n));
@@ -227,14 +230,14 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                                     onClick={() => { setShowProfileMenu(!showProfileMenu); setShowNotifications(false); }}
                                     className="h-10 w-10 rounded-full bg-blue-900/50 flex items-center justify-center text-blue-400 font-bold border border-blue-800 shadow-sm hover:border-blue-600 transition-colors cursor-pointer"
                                 >
-                                    JD
+                                    {profile?.initials ?? '…'}
                                 </button>
 
                                 {showProfileMenu && (
                                     <div className="absolute right-0 top-full mt-2 w-56 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl z-50 overflow-hidden">
                                         <div className="p-4 border-b border-neutral-800">
-                                            <p className="text-sm font-medium text-gray-100">John Doe</p>
-                                            <p className="text-xs text-gray-500">john.doe@example.com</p>
+                                            <p className="text-sm font-medium text-gray-100">{profile?.name ?? '—'}</p>
+                                            <p className="text-xs text-gray-500">{profile?.email ?? '—'}</p>
                                         </div>
                                         <div className="p-1">
                                             <Link href="/profile" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-neutral-800 rounded-lg group">

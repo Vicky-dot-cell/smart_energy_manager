@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Zap, Activity, Battery, TrendingUp } from 'lucide-react';
 import { DashboardShell } from '@/components/DashboardShell';
 import { StatCard } from '@/components/StatCard';
@@ -11,9 +11,22 @@ import { CostChangeChart } from '@/components/CostChangeChart';
 import { UsageEstimateChart } from '@/components/UsageEstimateChart';
 import { ActiveAppliancesChart } from '@/components/ActiveAppliancesChart';
 import { EnergyIntensityChart } from '@/components/EnergyIntensityChart';
+import { api, type DashboardStats } from '@/lib/api';
 
 export default function Home() {
   const [viewMode, setViewMode] = useState<'TODAY' | 'MONTH' | 'YEAR'>('TODAY');
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+
+  useEffect(() => {
+    api.stats().then(setStats).catch(console.error);
+  }, []);
+
+  const statCards = [
+    { title: 'Current Voltage', icon: Zap, stat: stats?.voltage },
+    { title: 'Current Load', icon: Activity, stat: stats?.current },
+    { title: 'Power Usage', icon: Battery, stat: stats?.power },
+    { title: 'Total Energy', icon: TrendingUp, stat: stats?.totalEnergy },
+  ];
 
   return (
     <DashboardShell>
@@ -27,8 +40,8 @@ export default function Home() {
               key={mode}
               onClick={() => setViewMode(mode)}
               className={`px-6 py-2 rounded-full text-xs font-semibold tracking-wider transition-all ${viewMode === mode
-                  ? 'bg-neutral-700 text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-300'
+                ? 'bg-neutral-700 text-white shadow-sm'
+                : 'text-gray-500 hover:text-gray-300'
                 }`}
             >
               {mode}
@@ -39,44 +52,23 @@ export default function Home() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard
-          title="Current Voltage"
-          value="230.5 V"
-          icon={Zap}
-          trend="+1.2%"
-          trendUp={true}
-        />
-        <StatCard
-          title="Current Load"
-          value="4.2 A"
-          icon={Activity}
-          trend="-0.5%"
-          trendUp={false}
-        />
-        <StatCard
-          title="Power Usage"
-          value="950 W"
-          icon={Battery}
-          trend="+5.4%"
-          trendUp={true}
-        />
-        <StatCard
-          title="Total Energy"
-          value="142.5 kWh"
-          icon={TrendingUp}
-          trend="+2.1%"
-          trendUp={true}
-        />
+        {statCards.map(({ title, icon, stat }) => (
+          <StatCard
+            key={title}
+            title={title}
+            value={stat?.value ?? '—'}
+            icon={icon}
+            trend={stat?.trend ?? ''}
+            trendUp={stat?.trendUp ?? true}
+          />
+        ))}
       </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Chart Section */}
         <div className="lg:col-span-2">
           <EnergyChart range={viewMode} />
         </div>
-
-        {/* Activity Feed */}
         <div>
           <RecentActivity />
         </div>
