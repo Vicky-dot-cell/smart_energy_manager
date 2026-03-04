@@ -256,6 +256,16 @@ app.get('/customers/:cid/settings', (req, res) => {
     catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
 });
 
+app.post('/customers/:cid/settings', (req, res) => {
+    try {
+        const cust = getCustomer(req.params.cid);
+        // Only update provided fields (shallow merge for simplicity, or just overwrite since frontend sends the full object)
+        cust.settings = { ...cust.settings, ...req.body };
+        fs.writeFileSync(DERIVED_PATH, JSON.stringify(store, null, 2));
+        res.json({ success: true, settings: cust.settings });
+    } catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
+});
+
 app.get('/customers/:cid/devices', (req, res) => {
     try { res.json(getCustomer(req.params.cid).devices); }
     catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
@@ -307,7 +317,7 @@ app.use((req, res) => {
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => {
     console.log(`\n🟢  Smart Energy Backend running on http://localhost:${PORT}`);
     console.log(`    POST http://localhost:${PORT}/ingest  ← ESP32 sends data here`);

@@ -19,9 +19,16 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const updateSettings = async (newSettings: Settings) => {
-        // In a real app we'd call an API to persist settings here.
-        // For this demo we just update local state immediately.
-        setSettings(newSettings);
+        try {
+            const res = await api.updateSettings(newSettings);
+            if (res.success) {
+                setSettings(res.settings);
+            }
+        } catch (e) {
+            console.error("Failed to save settings:", e);
+            // Fallback to local state if server fails
+            setSettings(newSettings);
+        }
     };
 
     const formatCurrency = (value: number) => {

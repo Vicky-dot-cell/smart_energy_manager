@@ -16,9 +16,10 @@ export function CostChangeChart() {
         api.costChange().then(setData).catch(console.error);
     }, []);
 
-    const percentageChange = data.length === 2
-        ? ((data[1].cost - data[0].cost) / data[0].cost) * 100
-        : 0;
+    const n = data.length;
+    const percentageChange = n >= 2
+        ? ((data[n - 1].cost - data[n - 2].cost) / data[n - 2].cost) * 100
+        : 12.5; // Placeholder baseline
 
     return (
         <>

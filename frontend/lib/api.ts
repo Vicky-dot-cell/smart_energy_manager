@@ -1,6 +1,6 @@
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-export const API_BASE = 'http://localhost:4000';
+export const API_BASE = 'http://localhost:4001';
 
 /**
  * Get the active customer ID from localStorage, fallback to CUST-001 (dummy default)
@@ -127,7 +127,12 @@ export const api = {
     cost: (range: Range, cid = getCustomerId()) => apiFetch<{ summary: CostSummary; chart: { range: string; data: CostBarItem[] } }>(`${base(cid)}/cost?range=${range}`),
 
     // Appliances
-    appliances: (range: Range, cid = getCustomerId()) => apiFetch<{ list: string[]; range: string; data: ApplianceBarItem[] }>(`${base(cid)}/appliances?range=${range}`),
+    appliances: (range: Range, cid = getCustomerId()) => apiFetch<{
+        list: string[];
+        range: string;
+        data: ApplianceBarItem[];
+        timeSeries: { labels: string[]; data: Record<string, number[]> };
+    }>(`${base(cid)}/appliances?range=${range}`),
 
     // Rooms
     rooms: (range: Range, cid = getCustomerId()) => apiFetch<RoomsPayload>(`${base(cid)}/rooms?range=${range}`),
@@ -135,6 +140,11 @@ export const api = {
     // Profile / Settings / Devices / Notifications
     profile: (cid = getCustomerId()) => apiFetch<Profile>(`${base(cid)}/profile`),
     settings: (cid = getCustomerId()) => apiFetch<Settings>(`${base(cid)}/settings`),
+    updateSettings: (settings: Settings, cid = getCustomerId()) =>
+        apiFetch<{ success: boolean; settings: Settings }>(`${base(cid)}/settings`, {
+            method: 'POST',
+            body: JSON.stringify(settings)
+        }),
     devices: (cid = getCustomerId()) => apiFetch<Device[]>(`${base(cid)}/devices`),
     notifications: (cid = getCustomerId()) => apiFetch<Notification[]>(`${base(cid)}/notifications`),
 

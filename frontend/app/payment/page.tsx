@@ -28,12 +28,15 @@ function PaymentGatewayInner() {
             .then(res => {
                 setStatus('success');
                 setMessage(res.message || 'Payment processed successfully!');
+                setTimeout(() => {
+                    router.push('/bill');
+                }, 3000);
             })
             .catch(err => {
                 setStatus('error');
                 setMessage(err.message || 'Payment failed.');
             });
-    }, [amount, method]);
+    }, [amount, method, router]);
 
     return (
         <div className="max-w-md mx-auto mt-20 p-8 bg-neutral-900 border border-neutral-800 rounded-3xl shadow-2xl text-center">

@@ -269,11 +269,41 @@ function process(esp) {
             ...(i === APPLIANCE_DIST.length - 1 ? { predicted: true } : {}),
         }));
 
+    const buildApplianceTimeSeries = (baseKwh, numPoints, labels) => {
+        const timeSeries = {};
+        APPLIANCE_DIST.forEach((a, aIdx) => {
+            timeSeries[a.name] = labels.map((_, i) =>
+                vary(baseKwh * a.share / numPoints, 0.15, i + a.share * 1000 + aIdx * 10)
+            );
+        });
+        return {
+            labels,
+            data: timeSeries
+        };
+    };
+
+    const getMonthDays = () => Array.from({ length: 30 }, (_, d) => {
+        const dt = new Date(); dt.setDate(dt.getDate() - 29 + d);
+        return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+    });
+
     const appliancesData = {
         list: APPLIANCE_DIST.map(a => a.name),
-        TODAY: { range: 'TODAY', data: buildApplianceBars(dailyKwh) },
-        MONTH: { range: 'MONTH', data: buildApplianceBars(monthlyKwh) },
-        YEAR: { range: 'YEAR', data: buildApplianceBars(monthlyKwh * 12) },
+        TODAY: {
+            range: 'TODAY',
+            data: buildApplianceBars(dailyKwh),
+            timeSeries: buildApplianceTimeSeries(dailyKwh, 24, Array.from({ length: 24 }, (_, h) => `${String(h).padStart(2, '0')}:00`))
+        },
+        MONTH: {
+            range: 'MONTH',
+            data: buildApplianceBars(monthlyKwh),
+            timeSeries: buildApplianceTimeSeries(monthlyKwh, 30, getMonthDays())
+        },
+        YEAR: {
+            range: 'YEAR',
+            data: buildApplianceBars(monthlyKwh * 12),
+            timeSeries: buildApplianceTimeSeries(monthlyKwh * 12, 12, MONTHS.concat(['Apr', 'May', 'Jun']).slice(-12))
+        },
     };
 
     // ── Rooms page ────────────────────────────────────────────────────────────
