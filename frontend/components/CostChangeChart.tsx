@@ -5,10 +5,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList, ResponsiveContai
 import { TrendingUp } from 'lucide-react';
 import { api, type CostChangeItem } from '@/lib/api';
 import { useSettings } from '@/contexts/SettingsContext';
+import { ChartModal } from './ChartModal';
 
 export function CostChangeChart() {
     const { formatCurrency } = useSettings();
     const [data, setData] = useState<CostChangeItem[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         api.costChange().then(setData).catch(console.error);
@@ -19,33 +21,66 @@ export function CostChangeChart() {
         : 0;
 
     return (
-        <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-neutral-800 flex flex-col h-[300px]">
-            <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Change in Cost</h3>
-            <div className="flex flex-row items-center h-full">
-                <div className="flex-1 h-full w-1/2">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
-                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#a3a3a3' }} />
-                            <YAxis hide />
-                            <Bar dataKey="cost" radius={[4, 4, 0, 0]} maxBarSize={50}>
-                                {data.map((_, index) => (
-                                    <Cell key={`cell-${index}`} fill={index === 1 ? '#2dd4bf' : '#4b5563'} />
-                                ))}
-                                <LabelList dataKey="cost" position="top" fill="#fff" formatter={(val: any) => formatCurrency(val)} />
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
-
-                <div className="w-1/2 flex flex-col justify-center items-start pl-4">
-                    <div className="flex items-center space-x-2 text-rose-500 mb-1">
-                        <TrendingUp size={24} className="fill-current" />
-                        <span className="text-3xl font-bold">{percentageChange.toFixed(2)}%</span>
+        <>
+            <div
+                onClick={() => setIsModalOpen(true)}
+                className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-neutral-800 flex flex-col h-[300px] cursor-pointer hover:border-neutral-700 hover:shadow-md transition-all group"
+            >
+                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4 group-hover:text-gray-300 transition-colors">Change in Cost</h3>
+                <div className="flex flex-row items-center h-full">
+                    <div className="flex-1 h-full w-1/2">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#a3a3a3' }} />
+                                <YAxis hide />
+                                <Bar dataKey="cost" radius={[4, 4, 0, 0]} maxBarSize={50}>
+                                    {data.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={index === 1 ? '#2dd4bf' : '#4b5563'} />
+                                    ))}
+                                    <LabelList dataKey="cost" position="top" fill="#fff" formatter={(val: any) => formatCurrency(val)} />
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
-                    <p className="text-gray-400 text-sm">INCREASE IN COST</p>
+
+                    <div className="w-1/2 flex flex-col justify-center items-start pl-4">
+                        <div className="flex items-center space-x-2 text-rose-500 mb-1">
+                            <TrendingUp size={24} className="fill-current" />
+                            <span className="text-3xl font-bold">{percentageChange.toFixed(2)}%</span>
+                        </div>
+                        <p className="text-gray-400 text-sm">INCREASE IN COST</p>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <ChartModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Change in Cost">
+                <div className="flex flex-row items-center h-full w-full">
+                    <div className="flex-1 h-full w-2/3">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={data} margin={{ top: 30, right: 30, left: 0, bottom: 20 }}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#a3a3a3', fontSize: 14 }} />
+                                <YAxis hide />
+                                <Bar dataKey="cost" radius={[4, 4, 0, 0]} maxBarSize={60}>
+                                    {data.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={index === 1 ? '#2dd4bf' : '#4b5563'} />
+                                    ))}
+                                    <LabelList dataKey="cost" position="top" fill="#fff" formatter={(val: any) => formatCurrency(val)} fontSize={14} offset={12} />
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+
+                    <div className="w-1/3 flex flex-col justify-center items-center">
+                        <div className="flex items-center space-x-3 text-rose-500 mb-2">
+                            <TrendingUp size={36} className="fill-current" />
+                            <span className="text-5xl font-bold">{percentageChange.toFixed(2)}%</span>
+                        </div>
+                        <p className="text-gray-400 text-lg">INCREASE IN COST</p>
+                    </div>
+                </div>
+            </ChartModal>
+        </>
     );
 }
