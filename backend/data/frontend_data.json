@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-04T15:46:52.817Z",
+  "generatedAt": "2026-03-04T17:17:33.474Z",
   "esp32_raw": {
     "device_id": "esp32_001",
     "timestamp": "2026-03-04T14:58:00Z",
@@ -1448,7 +1448,34 @@
           "time": "1 day ago",
           "unread": false
         }
-      ]
+      ],
+      "bill": {
+        "invoiceNumber": "INV-202603-0904",
+        "billingPeriod": "Mar 2026",
+        "dueDate": "19 Mar 2026",
+        "currentCharges": 3063.17,
+        "fixedCharges": 150,
+        "taxes": 153.16,
+        "totalDue": 3366.33,
+        "savings": 366.31,
+        "status": "Paid",
+        "paymentHistory": [
+          {
+            "id": "PAY-989",
+            "date": "04 Mar 2026",
+            "amount": 3366.33,
+            "method": "Net Banking",
+            "status": "Success"
+          },
+          {
+            "id": "PAY-892",
+            "date": "12 Feb 2026",
+            "amount": 3750.95,
+            "method": "Credit Card",
+            "status": "Success"
+          }
+        ]
+      }
     }
   }
 }

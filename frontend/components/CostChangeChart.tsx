@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList, ResponsiveContainer, Cell } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { api, type CostChangeItem } from '@/lib/api';
+import { useSettings } from '@/contexts/SettingsContext';
 
 export function CostChangeChart() {
+    const { formatCurrency } = useSettings();
     const [data, setData] = useState<CostChangeItem[]>([]);
 
     useEffect(() => {
@@ -30,7 +32,7 @@ export function CostChangeChart() {
                                 {data.map((_, index) => (
                                     <Cell key={`cell-${index}`} fill={index === 1 ? '#2dd4bf' : '#4b5563'} />
                                 ))}
-                                <LabelList dataKey="cost" position="top" fill="#fff" formatter={(val: any) => `$${val}`} />
+                                <LabelList dataKey="cost" position="top" fill="#fff" formatter={(val: any) => formatCurrency(val)} />
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>

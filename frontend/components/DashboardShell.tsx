@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useState, useEffect, useRef } from 'react';
-import { Home, BarChart2, Settings, User, Bell, LogOut, BatteryCharging, DollarSign, Tv, LayoutGrid, Menu, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Home, BarChart2, Settings, User, Bell, LogOut, BatteryCharging, DollarSign, Tv, LayoutGrid, Menu, ChevronLeft, ChevronRight, X, CreditCard } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -68,6 +68,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         { name: 'Dashboard', href: '/', icon: Home },
         { name: 'Analytics', href: '/analytics', icon: BarChart2 },
         { name: 'Cost', href: '/cost', icon: DollarSign },
+        { name: 'Bill & Payment', href: '/bill', icon: CreditCard },
         { name: 'Appliances', href: '/appliances', icon: Tv },
         { name: 'Rooms', href: '/rooms', icon: LayoutGrid },
         { name: 'Settings', href: '/settings', icon: Settings },

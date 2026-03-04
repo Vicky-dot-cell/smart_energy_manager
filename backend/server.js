@@ -266,6 +266,39 @@ app.get('/customers/:cid/notifications', (req, res) => {
     catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
 });
 
+// ── Billing and Payment ───────────────────────────────────────────────────────
+
+app.get('/customers/:cid/bill', (req, res) => {
+    try { res.json(getCustomer(req.params.cid).bill); }
+    catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
+});
+
+app.post('/customers/:cid/pay', (req, res) => {
+    try {
+        const { amount, method } = req.body;
+        const cid = req.params.cid;
+        const cust = getCustomer(cid);
+
+        if (cust.bill.status === 'Paid') {
+            return res.status(400).json({ error: 'Bill is already paid' });
+        }
+
+        // Simulating processing delay without blocking Event Loop entirely but keeping it simple
+        cust.bill.status = 'Paid';
+        cust.bill.paymentHistory.unshift({
+            id: `PAY-${Math.floor(Math.random() * 1000)}`,
+            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+            amount: amount,
+            method: method || 'Unknown',
+            status: 'Success'
+        });
+
+        // Commit changes to disk
+        fs.writeFileSync(DERIVED_PATH, JSON.stringify(store, null, 2));
+        res.json({ success: true, message: 'Payment processed successfully', newStatus: 'Paid' });
+    } catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
+});
+
 // ── 404 catch-all ─────────────────────────────────────────────────────────────
 
 app.use((req, res) => {

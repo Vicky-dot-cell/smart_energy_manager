@@ -39,6 +39,8 @@ const COST_CATEGORIES = [
     { name: 'Others', share: 0.15, color: '#f43f5e' },
 ];
 
+const PAYMENT_METHODS = ['Credit Card', 'Debit Card', 'UPI', 'Net Banking'];
+
 // Past months labels for change/trend charts
 const MONTHS = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
 
@@ -329,6 +331,22 @@ function process(esp) {
         { id: 6, title: 'Billing Cycle Update', desc: `Projected bill this month: ₹${r(monthlyCost, 0)}.`, time: '1 day ago', unread: false },
     ];
 
+    // ── Billing and Payment ───────────────────────────────────────────────────
+    const bill = {
+        invoiceNumber: `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`,
+        billingPeriod: `${new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}`,
+        dueDate: new Date(new Date().setDate(new Date().getDate() + 15)).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+        currentCharges: r(monthlyCost, 2),
+        fixedCharges: 150.00,
+        taxes: r(monthlyCost * 0.05, 2),
+        totalDue: r(monthlyCost + 150.00 + monthlyCost * 0.05, 2),
+        savings: r(Math.max(0, lastMonthCost - monthlyCost), 2),
+        status: 'Unpaid',
+        paymentHistory: [
+            { id: 'PAY-892', date: '12 Feb 2026', amount: r(lastMonthCost + 150.0 + (lastMonthCost * 0.05), 2), method: 'Credit Card', status: 'Success' }
+        ]
+    };
+
     // ── Assemble full structure ───────────────────────────────────────────────
     return {
         generatedAt: new Date().toISOString(),
@@ -359,6 +377,7 @@ function process(esp) {
                 settings,
                 devices,
                 notifications,
+                bill,
             },
         },
     };

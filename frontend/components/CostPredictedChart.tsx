@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { api, type CostPredItem } from '@/lib/api';
+import { useSettings } from '@/contexts/SettingsContext';
 
 export function CostPredictedChart() {
+    const { formatCurrency } = useSettings();
     const [data, setData] = useState<CostPredItem[]>([]);
 
     useEffect(() => {
@@ -20,7 +22,7 @@ export function CostPredictedChart() {
             <div className="flex-1 w-full min-h-0 relative flex items-center justify-center">
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-4 lg:pb-0 z-10">
                     <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold">Total</span>
-                    <span className="text-3xl font-bold text-white mt-1 pb-5">${totalCost}</span>
+                    <span className="text-3xl font-bold text-white mt-1 pb-5">{formatCurrency(totalCost)}</span>
                 </div>
 
                 <ResponsiveContainer width="100%" height="100%">
@@ -43,7 +45,7 @@ export function CostPredictedChart() {
                         <Tooltip
                             contentStyle={{ backgroundColor: '#171717', borderRadius: '8px', border: '1px solid #262626', color: '#fff' }}
                             itemStyle={{ color: '#fff' }}
-                            formatter={(value: any) => [`$${value}`, 'Cost']}
+                            formatter={(value: any) => [formatCurrency(value), 'Cost']}
                         />
                         <Legend
                             verticalAlign="bottom"

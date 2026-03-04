@@ -4,22 +4,32 @@ import { DashboardShell } from '@/components/DashboardShell';
 import { Bell, Shield, Smartphone, Globe, Moon, Save, Check, Lock, SmartphoneCharging, Wifi } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { api, type Settings, type Device } from '@/lib/api';
+import { useSettings } from '@/contexts/SettingsContext';
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState('general');
-    const [settings, setSettings] = useState<Settings | null>(null);
+    const { settings, updateSettings } = useSettings();
+    const [localSettings, setLocalSettings] = useState<Settings | null>(null);
     const [devices, setDevices] = useState<Device[]>([]);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
 
     useEffect(() => {
-        api.settings().then(setSettings).catch(console.error);
+        if (settings) {
+            setLocalSettings(settings);
+        }
+    }, [settings]);
+
+    useEffect(() => {
         api.devices().then(setDevices).catch(console.error);
     }, []);
 
     const handleSave = () => {
+        if (!localSettings) return;
         setSaving(true);
-        setTimeout(() => { setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2000); }, 800);
+        updateSettings(localSettings).then(() => {
+            setTimeout(() => { setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2000); }, 400);
+        });
     };
 
     const tabs = [
@@ -68,7 +78,7 @@ export default function SettingsPage() {
 
                 {/* Content */}
                 <div className="md:col-span-2 space-y-6">
-                    {activeTab === 'general' && settings && (
+                    {activeTab === 'general' && localSettings && (
                         <div className="bg-neutral-900 rounded-xl shadow-sm border border-neutral-800 p-6">
                             <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2"><Globe size={20} /> General Preferences</h3>
                             <div className="space-y-4">
@@ -78,8 +88,8 @@ export default function SettingsPage() {
                                         <p className="text-sm text-gray-500">Select your preferred language</p>
                                     </div>
                                     <select
-                                        value={settings.language}
-                                        onChange={e => setSettings({ ...settings, language: e.target.value })}
+                                        value={localSettings.language}
+                                        onChange={e => setLocalSettings({ ...localSettings, language: e.target.value })}
                                         className="bg-neutral-900 border border-neutral-700 text-gray-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                                     >
                                         <option>English (US)</option>
@@ -93,8 +103,8 @@ export default function SettingsPage() {
                                         <p className="text-sm text-gray-500">Currency for cost estimation</p>
                                     </div>
                                     <select
-                                        value={settings.currency}
-                                        onChange={e => setSettings({ ...settings, currency: e.target.value })}
+                                        value={localSettings.currency}
+                                        onChange={e => setLocalSettings({ ...localSettings, currency: e.target.value })}
                                         className="bg-neutral-900 border border-neutral-700 text-gray-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                                     >
                                         <option>USD ($)</option>
@@ -106,7 +116,7 @@ export default function SettingsPage() {
                         </div>
                     )}
 
-                    {activeTab === 'notifications' && settings && (
+                    {activeTab === 'notifications' && localSettings && (
                         <div className="bg-neutral-900 rounded-xl shadow-sm border border-neutral-800 p-6">
                             <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2"><Bell size={20} /> Notifications</h3>
                             <div className="space-y-4">
@@ -120,10 +130,10 @@ export default function SettingsPage() {
                                         <label className="relative inline-flex items-center cursor-pointer">
                                             <input
                                                 type="checkbox"
-                                                checked={settings.notifications[item.id]}
-                                                onChange={e => setSettings({
-                                                    ...settings,
-                                                    notifications: { ...settings.notifications, [item.id]: e.target.checked }
+                                                checked={localSettings.notifications[item.id]}
+                                                onChange={e => setLocalSettings({
+                                                    ...localSettings,
+                                                    notifications: { ...localSettings.notifications, [item.id]: e.target.checked }
                                                 })}
                                                 className="sr-only peer"
                                             />

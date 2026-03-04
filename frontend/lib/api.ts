@@ -74,6 +74,20 @@ export interface Settings { language: string; currency: string; notifications: {
 export interface Device { id: number; name: string; type: string; status: string; lastActive: string; }
 export interface Notification { id: number; title: string; desc: string; time: string; unread: boolean; }
 
+export interface BillPaymentItem { id: string; date: string; amount: number; method: string; status: string; }
+export interface Bill {
+    invoiceNumber: string;
+    billingPeriod: string;
+    dueDate: string;
+    currentCharges: number;
+    fixedCharges: number;
+    taxes: number;
+    totalDue: number;
+    savings: number;
+    status: 'Paid' | 'Unpaid';
+    paymentHistory: BillPaymentItem[];
+}
+
 // ─── API functions ────────────────────────────────────────────────────────────
 
 const base = (cid: string) => `/customers/${cid}`;
@@ -123,4 +137,12 @@ export const api = {
     settings: (cid = getCustomerId()) => apiFetch<Settings>(`${base(cid)}/settings`),
     devices: (cid = getCustomerId()) => apiFetch<Device[]>(`${base(cid)}/devices`),
     notifications: (cid = getCustomerId()) => apiFetch<Notification[]>(`${base(cid)}/notifications`),
+
+    // Billing
+    bill: (cid = getCustomerId()) => apiFetch<Bill>(`${base(cid)}/bill`),
+    pay: (amount: number, method: string, cid = getCustomerId()) =>
+        apiFetch<{ success: boolean; message: string; newStatus: string }>(`${base(cid)}/pay`, {
+            method: 'POST',
+            body: JSON.stringify({ amount, method })
+        }),
 };
