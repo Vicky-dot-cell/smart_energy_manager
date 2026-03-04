@@ -1,0 +1,9 @@
+{
+    "users": [
+        {
+            "consumer_id": "CUST-001",
+            "password": "password123",
+            "name": "kim jong un"
+        }
+    ]
+}

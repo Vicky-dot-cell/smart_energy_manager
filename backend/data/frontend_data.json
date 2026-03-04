@@ -1,0 +1,1454 @@
+{
+  "generatedAt": "2026-03-04T15:46:52.817Z",
+  "esp32_raw": {
+    "device_id": "esp32_001",
+    "timestamp": "2026-03-04T14:58:00Z",
+    "voltage": 231.2,
+    "current": 2.3,
+    "power": 531.8,
+    "energy": 13.1,
+    "frequency": 50.01,
+    "power_factor": 0.97,
+    "temperature": 33.5,
+    "status": "active"
+  },
+  "customers": {
+    "CUST-001": {
+      "dashboard": {
+        "stats": {
+          "voltage": {
+            "value": "231.2 V",
+            "trend": "+2.8%",
+            "trendUp": true
+          },
+          "current": {
+            "value": "2.3 A",
+            "trend": "+15%",
+            "trendUp": true
+          },
+          "power": {
+            "value": "531.8 W",
+            "trend": "+10.8%",
+            "trendUp": true
+          },
+          "totalEnergy": {
+            "value": "13.1 kWh",
+            "trend": "+19.1%",
+            "trendUp": true
+          }
+        },
+        "energyChart": {
+          "TODAY": {
+            "range": "TODAY",
+            "data": [
+              {
+                "time": "00:00",
+                "power": 567.91
+              },
+              {
+                "time": "01:00",
+                "power": 216.8
+              },
+              {
+                "time": "02:00",
+                "power": 195.75
+              },
+              {
+                "time": "03:00",
+                "power": 219.16
+              },
+              {
+                "time": "04:00",
+                "power": 225.7
+              },
+              {
+                "time": "05:00",
+                "power": 198.24
+              },
+              {
+                "time": "06:00",
+                "power": 521.77
+              },
+              {
+                "time": "07:00",
+                "power": 803.91
+              },
+              {
+                "time": "08:00",
+                "power": 721.77
+              },
+              {
+                "time": "09:00",
+                "power": 699.23
+              },
+              {
+                "time": "10:00",
+                "power": 568.09
+              },
+              {
+                "time": "11:00",
+                "power": 541.67
+              },
+              {
+                "time": "12:00",
+                "power": 489.39
+              },
+              {
+                "time": "13:00",
+                "power": 548.2
+              },
+              {
+                "time": "14:00",
+                "power": 564.04
+              },
+              {
+                "time": "15:00",
+                "power": 495.42
+              },
+              {
+                "time": "16:00",
+                "power": 522.09
+              },
+              {
+                "time": "17:00",
+                "power": 574.19
+              },
+              {
+                "time": "18:00",
+                "power": 824.39
+              },
+              {
+                "time": "19:00",
+                "power": 799.47
+              },
+              {
+                "time": "20:00",
+                "power": 909.22
+              },
+              {
+                "time": "21:00",
+                "power": 866.15
+              },
+              {
+                "time": "22:00",
+                "power": 489.42
+              },
+              {
+                "time": "23:00",
+                "power": 548.51
+              }
+            ]
+          },
+          "MONTH": {
+            "range": "MONTH",
+            "data": [
+              {
+                "time": "03 Feb",
+                "power": 474.97
+              },
+              {
+                "time": "04 Feb",
+                "power": 602.63
+              },
+              {
+                "time": "05 Feb",
+                "power": 544.75
+              },
+              {
+                "time": "06 Feb",
+                "power": 452.95
+              },
+              {
+                "time": "07 Feb",
+                "power": 567.7
+              },
+              {
+                "time": "08 Feb",
+                "power": 588.41
+              },
+              {
+                "time": "09 Feb",
+                "power": 460.83
+              },
+              {
+                "time": "10 Feb",
+                "power": 519.16
+              },
+              {
+                "time": "11 Feb",
+                "power": 610.6
+              },
+              {
+                "time": "12 Feb",
+                "power": 495.62
+              },
+              {
+                "time": "13 Feb",
+                "power": 475.41
+              },
+              {
+                "time": "14 Feb",
+                "power": 602.92
+              },
+              {
+                "time": "15 Feb",
+                "power": 544.13
+              },
+              {
+                "time": "16 Feb",
+                "power": 453.05
+              },
+              {
+                "time": "17 Feb",
+                "power": 568.26
+              },
+              {
+                "time": "18 Feb",
+                "power": 587.96
+              },
+              {
+                "time": "19 Feb",
+                "power": 460.54
+              },
+              {
+                "time": "20 Feb",
+                "power": 519.78
+              },
+              {
+                "time": "21 Feb",
+                "power": 610.5
+              },
+              {
+                "time": "22 Feb",
+                "power": 495.06
+              },
+              {
+                "time": "23 Feb",
+                "power": 475.86
+              },
+              {
+                "time": "24 Feb",
+                "power": 603.2
+              },
+              {
+                "time": "25 Feb",
+                "power": 543.5
+              },
+              {
+                "time": "26 Feb",
+                "power": 453.15
+              },
+              {
+                "time": "27 Feb",
+                "power": 568.82
+              },
+              {
+                "time": "28 Feb",
+                "power": 587.51
+              },
+              {
+                "time": "01 Mar",
+                "power": 460.26
+              },
+              {
+                "time": "02 Mar",
+                "power": 520.41
+              },
+              {
+                "time": "03 Mar",
+                "power": 610.4
+              },
+              {
+                "time": "04 Mar",
+                "power": 494.5
+              }
+            ]
+          },
+          "YEAR": {
+            "range": "YEAR",
+            "data": [
+              {
+                "time": "Oct",
+                "power": 462.15
+              },
+              {
+                "time": "Nov",
+                "power": 629.8
+              },
+              {
+                "time": "Dec",
+                "power": 540.73
+              },
+              {
+                "time": "Jan",
+                "power": 428.26
+              },
+              {
+                "time": "Feb",
+                "power": 587.01
+              },
+              {
+                "time": "Mar",
+                "power": 601.13
+              },
+              {
+                "time": "Apr",
+                "power": 433.63
+              },
+              {
+                "time": "May",
+                "power": 523.29
+              },
+              {
+                "time": "Jun",
+                "power": 635.24
+              }
+            ]
+          }
+        },
+        "recentActivity": [
+          {
+            "id": 1,
+            "type": "success",
+            "message": "Device esp32_001 online — active",
+            "time": "2 min ago"
+          },
+          {
+            "id": 2,
+            "type": "info",
+            "message": "Power reading: 531.8 W @ 231.2 V",
+            "time": "5 min ago"
+          },
+          {
+            "id": 3,
+            "type": "info",
+            "message": "Power factor: 0.97 — good",
+            "time": "10 min ago"
+          },
+          {
+            "id": 4,
+            "type": "info",
+            "message": "Sensor temperature: 33.5 °C",
+            "time": "15 min ago"
+          },
+          {
+            "id": 5,
+            "type": "info",
+            "message": "Daily estimated cost: ₹102.11",
+            "time": "30 min ago"
+          },
+          {
+            "id": 6,
+            "type": "success",
+            "message": "Monthly projected: ₹3063",
+            "time": "1 hr ago"
+          }
+        ],
+        "costPredicted": [
+          {
+            "name": "Appliances",
+            "value": 1225.27,
+            "color": "#6366f1"
+          },
+          {
+            "name": "HVAC",
+            "value": 857.69,
+            "color": "#22d3ee"
+          },
+          {
+            "name": "Lighting",
+            "value": 520.74,
+            "color": "#f59e0b"
+          },
+          {
+            "name": "Others",
+            "value": 459.48,
+            "color": "#f43f5e"
+          }
+        ],
+        "costChange": [
+          {
+            "name": "Oct",
+            "cost": 2736.11
+          },
+          {
+            "name": "Nov",
+            "cost": 3586.54
+          },
+          {
+            "name": "Dec",
+            "cost": 3065.97
+          },
+          {
+            "name": "Jan",
+            "cost": 2538.06
+          },
+          {
+            "name": "Feb",
+            "cost": 3385.69
+          },
+          {
+            "name": "Mar",
+            "cost": 3063.17
+          }
+        ],
+        "usageEstimate": {
+          "tillNow": 51.05,
+          "predicted": 382.9,
+          "data": [
+            {
+              "name": "Mon",
+              "kwh": 11.95
+            },
+            {
+              "name": "Tue",
+              "kwh": 14.25
+            },
+            {
+              "name": "Wed",
+              "kwh": 12.65
+            },
+            {
+              "name": "Thu",
+              "kwh": 11.35
+            },
+            {
+              "name": "Fri",
+              "kwh": 13.75
+            },
+            {
+              "name": "Sat",
+              "kwh": 13.57
+            },
+            {
+              "name": "Sun",
+              "kwh": 11.27
+            }
+          ]
+        },
+        "activeAppliances": {
+          "top3Percent": 70,
+          "data": [
+            {
+              "name": "Air Conditioner",
+              "kwh": 4.47
+            },
+            {
+              "name": "Water Heater",
+              "kwh": 2.55
+            },
+            {
+              "name": "Refrigerator",
+              "kwh": 1.91
+            },
+            {
+              "name": "Washing Machine",
+              "kwh": 1.53
+            },
+            {
+              "name": "Lighting",
+              "kwh": 1.28
+            },
+            {
+              "name": "Others",
+              "kwh": 1.02
+            }
+          ]
+        },
+        "energyIntensity": {
+          "value": 548.2,
+          "max": 2000,
+          "unit": "VA"
+        }
+      },
+      "analytics": {
+        "peakUsageHours": [
+          {
+            "time": "07:00",
+            "usage": 803.91
+          },
+          {
+            "time": "08:00",
+            "usage": 721.77
+          },
+          {
+            "time": "09:00",
+            "usage": 699.23
+          },
+          {
+            "time": "18:00",
+            "usage": 824.39
+          },
+          {
+            "time": "19:00",
+            "usage": 799.47
+          },
+          {
+            "time": "20:00",
+            "usage": 909.22
+          },
+          {
+            "time": "21:00",
+            "usage": 866.15
+          }
+        ],
+        "monthlyBreakdown": [
+          {
+            "date": "Oct 2025",
+            "consumption": 356.53,
+            "cost": 2852.24,
+            "status": "Normal"
+          },
+          {
+            "date": "Nov 2025",
+            "consumption": 439.58,
+            "cost": 3516.64,
+            "status": "High"
+          },
+          {
+            "date": "Dec 2025",
+            "consumption": 374.15,
+            "cost": 2993.2,
+            "status": "Normal"
+          },
+          {
+            "date": "Jan 2026",
+            "consumption": 331.63,
+            "cost": 2653.04,
+            "status": "Low"
+          },
+          {
+            "date": "Feb 2026",
+            "consumption": 423.4,
+            "cost": 3387.2,
+            "status": "High"
+          },
+          {
+            "date": "Mar 2026",
+            "consumption": 409.06,
+            "cost": 3272.48,
+            "status": "Normal"
+          }
+        ]
+      },
+      "cost": {
+        "summary": {
+          "lastMonth": 3429.48,
+          "soFarThisMonth": 104.8,
+          "predictedThisMonth": 3063.17,
+          "estimatedSavings": 366.31
+        },
+        "chart": {
+          "TODAY": {
+            "range": "TODAY",
+            "data": [
+              {
+                "name": "00:00",
+                "cost": 4.05
+              },
+              {
+                "name": "01:00",
+                "cost": 4.89
+              },
+              {
+                "name": "02:00",
+                "cost": 4.06
+              },
+              {
+                "name": "03:00",
+                "cost": 3.74
+              },
+              {
+                "name": "04:00",
+                "cost": 4.77
+              },
+              {
+                "name": "05:00",
+                "cost": 4.45
+              },
+              {
+                "name": "06:00",
+                "cost": 3.62
+              },
+              {
+                "name": "07:00",
+                "cost": 4.45
+              },
+              {
+                "name": "08:00",
+                "cost": 4.77
+              },
+              {
+                "name": "09:00",
+                "cost": 3.74
+              },
+              {
+                "name": "10:00",
+                "cost": 4.06
+              },
+              {
+                "name": "11:00",
+                "cost": 4.89
+              },
+              {
+                "name": "12:00",
+                "cost": 4.05
+              },
+              {
+                "name": "13:00",
+                "cost": 3.74
+              },
+              {
+                "name": "14:00",
+                "cost": 4.77
+              },
+              {
+                "name": "15:00",
+                "cost": 4.45
+              },
+              {
+                "name": "16:00",
+                "cost": 3.62
+              },
+              {
+                "name": "17:00",
+                "cost": 4.46
+              },
+              {
+                "name": "18:00",
+                "cost": 4.77
+              },
+              {
+                "name": "19:00",
+                "cost": 3.73
+              },
+              {
+                "name": "20:00",
+                "cost": 4.06
+              },
+              {
+                "name": "21:00",
+                "cost": 4.89
+              },
+              {
+                "name": "22:00",
+                "cost": 4.05
+              },
+              {
+                "name": "23:00",
+                "cost": 3.74,
+                "predicted": true
+              }
+            ]
+          },
+          "MONTH": {
+            "range": "MONTH",
+            "data": [
+              {
+                "name": "03 Feb",
+                "cost": 97.3
+              },
+              {
+                "name": "04 Feb",
+                "cost": 117.42
+              },
+              {
+                "name": "05 Feb",
+                "cost": 97.42
+              },
+              {
+                "name": "06 Feb",
+                "cost": 89.69
+              },
+              {
+                "name": "07 Feb",
+                "cost": 114.48
+              },
+              {
+                "name": "08 Feb",
+                "cost": 106.85
+              },
+              {
+                "name": "09 Feb",
+                "cost": 86.79
+              },
+              {
+                "name": "10 Feb",
+                "cost": 106.85
+              },
+              {
+                "name": "11 Feb",
+                "cost": 114.48
+              },
+              {
+                "name": "12 Feb",
+                "cost": 89.7
+              },
+              {
+                "name": "13 Feb",
+                "cost": 97.42
+              },
+              {
+                "name": "14 Feb",
+                "cost": 117.42
+              },
+              {
+                "name": "15 Feb",
+                "cost": 97.31
+              },
+              {
+                "name": "16 Feb",
+                "cost": 89.76
+              },
+              {
+                "name": "17 Feb",
+                "cost": 114.55
+              },
+              {
+                "name": "18 Feb",
+                "cost": 106.74
+              },
+              {
+                "name": "19 Feb",
+                "cost": 86.79
+              },
+              {
+                "name": "20 Feb",
+                "cost": 106.96
+              },
+              {
+                "name": "21 Feb",
+                "cost": 114.41
+              },
+              {
+                "name": "22 Feb",
+                "cost": 89.62
+              },
+              {
+                "name": "23 Feb",
+                "cost": 97.53
+              },
+              {
+                "name": "24 Feb",
+                "cost": 117.42
+              },
+              {
+                "name": "25 Feb",
+                "cost": 97.19
+              },
+              {
+                "name": "26 Feb",
+                "cost": 89.84
+              },
+              {
+                "name": "27 Feb",
+                "cost": 114.62
+              },
+              {
+                "name": "28 Feb",
+                "cost": 106.62
+              },
+              {
+                "name": "01 Mar",
+                "cost": 86.79
+              },
+              {
+                "name": "02 Mar",
+                "cost": 107.08
+              },
+              {
+                "name": "03 Mar",
+                "cost": 114.34
+              },
+              {
+                "name": "04 Mar",
+                "cost": 89.55,
+                "predicted": true
+              }
+            ]
+          },
+          "YEAR": {
+            "range": "YEAR",
+            "data": [
+              {
+                "name": "Oct",
+                "cost": 2919.04
+              },
+              {
+                "name": "Nov",
+                "cost": 3522.64
+              },
+              {
+                "name": "Dec",
+                "cost": 2922.64
+              },
+              {
+                "name": "Jan",
+                "cost": 2690.76
+              },
+              {
+                "name": "Feb",
+                "cost": 3434.42
+              },
+              {
+                "name": "Mar",
+                "cost": 3205.58
+              },
+              {
+                "name": "Apr",
+                "cost": 2603.69
+              },
+              {
+                "name": "May",
+                "cost": 3205.42
+              },
+              {
+                "name": "Jun",
+                "cost": 3434.51,
+                "predicted": true
+              }
+            ]
+          }
+        }
+      },
+      "appliances": {
+        "list": [
+          "Air Conditioner",
+          "Water Heater",
+          "Refrigerator",
+          "Washing Machine",
+          "Lighting",
+          "Others"
+        ],
+        "TODAY": {
+          "range": "TODAY",
+          "data": [
+            {
+              "name": "Air Conditioner",
+              "electricity": 4.36
+            },
+            {
+              "name": "Water Heater",
+              "electricity": 2.81
+            },
+            {
+              "name": "Refrigerator",
+              "electricity": 1.84
+            },
+            {
+              "name": "Washing Machine",
+              "electricity": 1.41
+            },
+            {
+              "name": "Lighting",
+              "electricity": 1.39
+            },
+            {
+              "name": "Others",
+              "electricity": 1.04,
+              "predicted": true
+            }
+          ]
+        },
+        "MONTH": {
+          "range": "MONTH",
+          "data": [
+            {
+              "name": "Air Conditioner",
+              "electricity": 130.83
+            },
+            {
+              "name": "Water Heater",
+              "electricity": 84.22
+            },
+            {
+              "name": "Refrigerator",
+              "electricity": 55.25
+            },
+            {
+              "name": "Washing Machine",
+              "electricity": 42.45
+            },
+            {
+              "name": "Lighting",
+              "electricity": 41.55
+            },
+            {
+              "name": "Others",
+              "electricity": 31.35,
+              "predicted": true
+            }
+          ]
+        },
+        "YEAR": {
+          "range": "YEAR",
+          "data": [
+            {
+              "name": "Air Conditioner",
+              "electricity": 1569.92
+            },
+            {
+              "name": "Water Heater",
+              "electricity": 1010.59
+            },
+            {
+              "name": "Refrigerator",
+              "electricity": 663.02
+            },
+            {
+              "name": "Washing Machine",
+              "electricity": 509.37
+            },
+            {
+              "name": "Lighting",
+              "electricity": 498.62
+            },
+            {
+              "name": "Others",
+              "electricity": 376.18,
+              "predicted": true
+            }
+          ]
+        }
+      },
+      "rooms": {
+        "TODAY": {
+          "rooms": [
+            "Living Room",
+            "Bedroom",
+            "Kitchen",
+            "Bathroom",
+            "Study"
+          ],
+          "range": "TODAY",
+          "labels": [
+            "00:00",
+            "01:00",
+            "02:00",
+            "03:00",
+            "04:00",
+            "05:00",
+            "06:00",
+            "07:00",
+            "08:00",
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00",
+            "17:00",
+            "18:00",
+            "19:00",
+            "20:00",
+            "21:00",
+            "22:00",
+            "23:00"
+          ],
+          "data": {
+            "Living Room": [
+              0.15,
+              0.18,
+              0.16,
+              0.14,
+              0.17,
+              0.17,
+              0.14,
+              0.16,
+              0.18,
+              0.15,
+              0.15,
+              0.18,
+              0.16,
+              0.14,
+              0.17,
+              0.17,
+              0.14,
+              0.16,
+              0.18,
+              0.15,
+              0.15,
+              0.18,
+              0.16,
+              0.14
+            ],
+            "Bedroom": [
+              0.12,
+              0.15,
+              0.13,
+              0.12,
+              0.14,
+              0.14,
+              0.12,
+              0.13,
+              0.15,
+              0.12,
+              0.12,
+              0.15,
+              0.13,
+              0.12,
+              0.14,
+              0.14,
+              0.12,
+              0.13,
+              0.15,
+              0.12,
+              0.12,
+              0.15,
+              0.13,
+              0.12
+            ],
+            "Kitchen": [
+              0.11,
+              0.13,
+              0.12,
+              0.1,
+              0.12,
+              0.13,
+              0.1,
+              0.12,
+              0.13,
+              0.11,
+              0.11,
+              0.13,
+              0.12,
+              0.1,
+              0.12,
+              0.13,
+              0.1,
+              0.12,
+              0.13,
+              0.11,
+              0.11,
+              0.13,
+              0.12,
+              0.1
+            ],
+            "Bathroom": [
+              0.06,
+              0.08,
+              0.07,
+              0.06,
+              0.07,
+              0.07,
+              0.06,
+              0.07,
+              0.08,
+              0.07,
+              0.06,
+              0.08,
+              0.07,
+              0.06,
+              0.07,
+              0.07,
+              0.06,
+              0.07,
+              0.08,
+              0.07,
+              0.06,
+              0.08,
+              0.07,
+              0.06
+            ],
+            "Study": [
+              0.05,
+              0.06,
+              0.05,
+              0.05,
+              0.06,
+              0.06,
+              0.05,
+              0.05,
+              0.06,
+              0.05,
+              0.05,
+              0.06,
+              0.05,
+              0.05,
+              0.06,
+              0.06,
+              0.05,
+              0.05,
+              0.06,
+              0.05,
+              0.05,
+              0.06,
+              0.05,
+              0.05
+            ]
+          }
+        },
+        "MONTH": {
+          "rooms": [
+            "Living Room",
+            "Bedroom",
+            "Kitchen",
+            "Bathroom",
+            "Study"
+          ],
+          "range": "MONTH",
+          "labels": [
+            "03 Feb",
+            "04 Feb",
+            "05 Feb",
+            "06 Feb",
+            "07 Feb",
+            "08 Feb",
+            "09 Feb",
+            "10 Feb",
+            "11 Feb",
+            "12 Feb",
+            "13 Feb",
+            "14 Feb",
+            "15 Feb",
+            "16 Feb",
+            "17 Feb",
+            "18 Feb",
+            "19 Feb",
+            "20 Feb",
+            "21 Feb",
+            "22 Feb",
+            "23 Feb",
+            "24 Feb",
+            "25 Feb",
+            "26 Feb",
+            "27 Feb",
+            "28 Feb",
+            "01 Mar",
+            "02 Mar",
+            "03 Mar",
+            "04 Mar"
+          ],
+          "data": {
+            "Living Room": [
+              3.56,
+              4.27,
+              3.83,
+              3.39,
+              4.1,
+              4.1,
+              3.39,
+              3.83,
+              4.27,
+              3.56,
+              3.56,
+              4.27,
+              3.83,
+              3.39,
+              4.1,
+              4.1,
+              3.39,
+              3.83,
+              4.26,
+              3.56,
+              3.56,
+              4.27,
+              3.82,
+              3.39,
+              4.1,
+              4.09,
+              3.39,
+              3.84,
+              4.26,
+              3.55
+            ],
+            "Bedroom": [
+              2.95,
+              3.55,
+              3.21,
+              2.82,
+              3.4,
+              3.43,
+              2.83,
+              3.18,
+              3.56,
+              2.98,
+              2.95,
+              3.55,
+              3.2,
+              2.82,
+              3.4,
+              3.43,
+              2.83,
+              3.18,
+              3.56,
+              2.98,
+              2.96,
+              3.55,
+              3.2,
+              2.82,
+              3.41,
+              3.42,
+              2.83,
+              3.18,
+              3.56,
+              2.97
+            ],
+            "Kitchen": [
+              2.59,
+              3.12,
+              2.83,
+              2.48,
+              2.99,
+              3.02,
+              2.49,
+              2.79,
+              3.13,
+              2.63,
+              2.59,
+              3.12,
+              2.83,
+              2.48,
+              2.99,
+              3.02,
+              2.49,
+              2.79,
+              3.13,
+              2.63,
+              2.6,
+              3.12,
+              2.83,
+              2.48,
+              2.99,
+              3.02,
+              2.49,
+              2.79,
+              3.13,
+              2.62
+            ],
+            "Bathroom": [
+              1.52,
+              1.84,
+              1.69,
+              1.46,
+              1.75,
+              1.8,
+              1.48,
+              1.63,
+              1.86,
+              1.56,
+              1.52,
+              1.84,
+              1.69,
+              1.46,
+              1.75,
+              1.8,
+              1.48,
+              1.63,
+              1.85,
+              1.56,
+              1.52,
+              1.84,
+              1.68,
+              1.46,
+              1.76,
+              1.79,
+              1.48,
+              1.64,
+              1.85,
+              1.56
+            ],
+            "Study": [
+              1.17,
+              1.41,
+              1.3,
+              1.12,
+              1.35,
+              1.39,
+              1.14,
+              1.25,
+              1.43,
+              1.21,
+              1.17,
+              1.41,
+              1.3,
+              1.13,
+              1.35,
+              1.38,
+              1.14,
+              1.25,
+              1.43,
+              1.21,
+              1.17,
+              1.41,
+              1.3,
+              1.13,
+              1.35,
+              1.38,
+              1.14,
+              1.25,
+              1.43,
+              1.2
+            ]
+          }
+        },
+        "YEAR": {
+          "rooms": [
+            "Living Room",
+            "Bedroom",
+            "Kitchen",
+            "Bathroom",
+            "Study"
+          ],
+          "range": "YEAR",
+          "labels": [
+            "Oct",
+            "Nov",
+            "Dec",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun"
+          ],
+          "data": {
+            "Living Room": [
+              106.69,
+              127.95,
+              114.94,
+              101.74,
+              122.93,
+              123,
+              101.77,
+              114.85,
+              127.98
+            ],
+            "Bedroom": [
+              88.55,
+              106.48,
+              96.24,
+              84.65,
+              102.07,
+              102.86,
+              84.96,
+              95.26,
+              106.78
+            ],
+            "Kitchen": [
+              77.74,
+              93.61,
+              84.93,
+              74.43,
+              89.62,
+              90.7,
+              74.85,
+              83.59,
+              94.03
+            ],
+            "Bathroom": [
+              45.62,
+              55.14,
+              50.61,
+              43.9,
+              52.59,
+              53.91,
+              44.4,
+              48.97,
+              55.65
+            ],
+            "Study": [
+              35.02,
+              42.37,
+              39.04,
+              33.75,
+              40.36,
+              41.55,
+              34.2,
+              37.56,
+              42.83
+            ]
+          }
+        }
+      },
+      "profile": {
+        "name": "kim jong un",
+        "initials": "JK",
+        "role": "Admin",
+        "email": "kimjongun@smartenergy.io",
+        "phone": "+850 123 4567",
+        "location": "Pyongyang, North Korea",
+        "memberSince": "January 2025",
+        "lastLogin": "4/3/2026, 8:28:00 pm"
+      },
+      "settings": {
+        "language": "English",
+        "currency": "INR (₹)",
+        "notifications": {
+          "email": true,
+          "push": true,
+          "reports": true
+        }
+      },
+      "devices": [
+        {
+          "id": 1,
+          "name": "esp32_001",
+          "type": "ESP32 Energy Meter",
+          "status": "active",
+          "lastActive": "4/3/2026, 8:28:00 pm"
+        },
+        {
+          "id": 2,
+          "name": "Smart Plug A",
+          "type": "Smart Plug",
+          "status": "inactive",
+          "lastActive": "2026-03-03 10:00"
+        },
+        {
+          "id": 3,
+          "name": "Smart Plug B",
+          "type": "Smart Plug",
+          "status": "inactive",
+          "lastActive": "2026-03-02 08:30"
+        }
+      ],
+      "notifications": [
+        {
+          "id": 1,
+          "title": "High Energy Consumption",
+          "desc": "Power usage hit 532 W — above daily average.",
+          "time": "2 min ago",
+          "unread": true
+        },
+        {
+          "id": 2,
+          "title": "Device Online",
+          "desc": "esp32_001 connected and streaming data.",
+          "time": "5 min ago",
+          "unread": true
+        },
+        {
+          "id": 3,
+          "title": "Monthly Report Ready",
+          "desc": "Your energy report for February is ready.",
+          "time": "1 hr ago",
+          "unread": true
+        },
+        {
+          "id": 4,
+          "title": "Power Factor Alert",
+          "desc": "PF is 0.97 — healthy.",
+          "time": "2 hrs ago",
+          "unread": false
+        },
+        {
+          "id": 5,
+          "title": "Temperature Normal",
+          "desc": "Sensor temp is 33.5 °C — within safe range.",
+          "time": "3 hrs ago",
+          "unread": false
+        },
+        {
+          "id": 6,
+          "title": "Billing Cycle Update",
+          "desc": "Projected bill this month: ₹3063.",
+          "time": "1 day ago",
+          "unread": false
+        }
+      ]
+    }
+  }
+}

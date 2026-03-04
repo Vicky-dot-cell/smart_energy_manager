@@ -2,13 +2,14 @@
 
 import { ReactNode, useState, useEffect, useRef } from 'react';
 import { Home, BarChart2, Settings, User, Bell, LogOut, BatteryCharging, DollarSign, Tv, LayoutGrid, Menu, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { api, type Notification as ApiNotification, type Profile } from '@/lib/api';
 
 export function DashboardShell({ children }: { children: ReactNode }) {
     const pathname = usePathname();
+    const router = useRouter();
     const [sidebarWidth, setSidebarWidth] = useState(256); // Default 256px
     const [isResizing, setIsResizing] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
@@ -19,11 +20,24 @@ export function DashboardShell({ children }: { children: ReactNode }) {
     const [selectedNotificationId, setSelectedNotificationId] = useState<number | null>(null);
     const [notifications, setNotifications] = useState<ApiNotification[]>([]);
     const [profile, setProfile] = useState<Profile | null>(null);
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
     useEffect(() => {
-        api.notifications().then(setNotifications).catch(console.error);
-        api.profile().then(setProfile).catch(console.error);
-    }, []);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            router.replace('/login');
+        } else {
+            setIsCheckingAuth(false);
+            api.notifications().then(setNotifications).catch(console.error);
+            api.profile().then(setProfile).catch(console.error);
+        }
+    }, [router]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('consumer_id');
+        router.push('/login');
+    };
 
     const markAsRead = (id: number) => {
         setNotifications(notifications.map(n => n.id === id ? { ...n, unread: false } : n));
@@ -87,6 +101,10 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         };
     }, [isResizing]);
 
+    if (isCheckingAuth) {
+        return <div className="min-h-screen bg-neutral-950 flex items-center justify-center text-gray-400">Loading...</div>;
+    }
+
     return (
         <div className="min-h-screen min-w-[1280px] bg-neutral-950 flex font-sans text-gray-100">
             {/* Sidebar */}
@@ -146,13 +164,13 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                     })}
                 </nav>
                 <div className="p-4 border-t border-neutral-800 overflow-hidden">
-                    <a href="#" className={clsx(
-                        "flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-900/20 rounded-lg font-medium transition-colors whitespace-nowrap",
+                    <button onClick={handleLogout} className={clsx(
+                        "w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-900/20 rounded-lg font-medium transition-colors whitespace-nowrap",
                         isCollapsed && "justify-center px-2"
                     )}>
                         <LogOut size={20} className="shrink-0" />
                         {!isCollapsed && <span>Logout</span>}
-                    </a>
+                    </button>
                 </div>
 
                 {/* Resize Handle */}
@@ -248,7 +266,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                                             </Link>
                                         </div>
                                         <div className="p-1 border-t border-neutral-800">
-                                            <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-900/20 rounded-lg transition-colors">
+                                            <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-900/20 rounded-lg transition-colors">
                                                 <LogOut size={16} /> Logout
                                             </button>
                                         </div>
