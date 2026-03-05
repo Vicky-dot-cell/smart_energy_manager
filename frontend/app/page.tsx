@@ -11,15 +11,13 @@ import { CostChangeChart } from '@/components/CostChangeChart';
 import { UsageEstimateChart } from '@/components/UsageEstimateChart';
 import { ActiveAppliancesChart } from '@/components/ActiveAppliancesChart';
 import { EnergyIntensityChart } from '@/components/EnergyIntensityChart';
-import { api, type DashboardStats } from '@/lib/api';
+import { useCustomerData } from '@/contexts/CustomerDataContext';
 
 export default function Home() {
   const [viewMode, setViewMode] = useState<'TODAY' | 'MONTH' | 'YEAR'>('TODAY');
-  const [stats, setStats] = useState<DashboardStats | null>(null);
 
-  useEffect(() => {
-    api.stats().then(setStats).catch(console.error);
-  }, []);
+  const { data } = useCustomerData();
+  const stats = data?.dashboard?.stats;
 
   const statCards = [
     { title: 'Current Voltage', icon: Zap, stat: stats?.voltage },

@@ -1,17 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { api, type UsageEstimate } from '@/lib/api';
+import { useState } from 'react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, ResponsiveContainer } from 'recharts';
+import { useCustomerData } from '@/contexts/CustomerDataContext';
 import { ChartModal } from './ChartModal';
 
 export function UsageEstimateChart() {
-    const [info, setInfo] = useState<UsageEstimate | null>(null);
+    const { data: customerData } = useCustomerData();
+    const info = customerData?.dashboard?.usageEstimate ?? null;
+    const rawData = info?.data ?? [];
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        api.usageEstimate().then(setInfo).catch(console.error);
-    }, []);
+    // Rolling window: always show newest data scrolling in from right.
+    // The backend provides 7 data points per tick — we show them as a live ticker.
+    const displayData = rawData.map((d: any, i: number) => ({
+        ...d,
+        // Shade points as "actual" (past) vs "predicted" (future) based on position
+        actual: i < Math.ceil(rawData.length * 0.6) ? d.kwh : null,
+        predicted: i >= Math.ceil(rawData.length * 0.6) - 1 ? d.kwh : null,
+    }));
+
+    const tillNow = info?.tillNow ?? null;
+    const predicted = info?.predicted ?? null;
 
     return (
         <>
@@ -19,46 +29,87 @@ export function UsageEstimateChart() {
                 onClick={() => setIsModalOpen(true)}
                 className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-neutral-800 flex flex-col h-[300px] cursor-pointer hover:border-neutral-700 hover:shadow-md transition-all group"
             >
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4 group-hover:text-gray-300 transition-colors">Usage Estimate</h3>
+                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3 group-hover:text-gray-300 transition-colors">
+                    Usage Estimate
+                </h3>
 
-                <div className="flex justify-between text-xs text-gray-400 mb-2 px-2">
-                    <span>Till Now: <span className="text-white font-bold">{info?.tillNow ?? '—'} kWh</span></span>
-                    <span>Predicted: <span className="text-white font-bold">{info?.predicted ?? '—'} kWh</span></span>
+                <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
+                    <span>
+                        Till Now:{' '}
+                        <span
+                            className="text-emerald-400 font-bold tabular-nums"
+                            style={{ transition: 'all 0.5s ease' }}
+                        >
+                            {tillNow ?? '—'} kWh
+                        </span>
+                    </span>
+                    <span>
+                        Predicted:{' '}
+                        <span
+                            className="text-blue-400 font-bold tabular-nums"
+                            style={{ transition: 'all 0.5s ease' }}
+                        >
+                            {predicted ?? '—'} kWh
+                        </span>
+                    </span>
                 </div>
 
-                <div className="flex-1 w-full min-h-0">
+                {/* Fixed pixel height — prevents Recharts -1 dimension bug inside flex */}
+                <div style={{ width: '100%', height: 178 }}>
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={info?.data ?? []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                        <AreaChart data={displayData} margin={{ top: 8, right: 8, left: -24, bottom: 0 }}>
                             <defs>
-                                <linearGradient id="splitColor" x1="0" y1="0" x2="1" y2="0">
-                                    <stop offset="0.5" stopColor="#ec4899" stopOpacity={0.8} />
-                                    <stop offset="0.5" stopColor="#3b82f6" stopOpacity={0.8} />
+                                <linearGradient id="gradActual" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.5} />
+                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.05} />
+                                </linearGradient>
+                                <linearGradient id="gradPredicted" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.5} />
+                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05} />
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
-                            <XAxis dataKey="name" hide />
-                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 12 }} />
-                            <ReferenceLine x="Current" stroke="#666" strokeDasharray="3 3" />
-                            <Area type="monotone" dataKey="kwh" stroke="none" fill="url(#splitColor)" />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
+                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#4b5563', fontSize: 10 }} />
+                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#4b5563', fontSize: 10 }} />
+                            <Tooltip
+                                contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '8px', color: '#fff', fontSize: 12 }}
+                                formatter={(v: any, name: string | undefined) => [`${Number(v).toFixed(2)} kWh`, name === 'actual' ? 'Actual' : 'Predicted']}
+                                cursor={{ stroke: '#374151', strokeWidth: 1 }}
+                            />
+                            <ReferenceLine x={displayData[Math.ceil(displayData.length * 0.6) - 1]?.name} stroke="#374151" strokeDasharray="4 4" />
+                            {/* Green: actual consumption */}
+                            <Area type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2} fill="url(#gradActual)" isAnimationActive={false} dot={false} connectNulls={false} />
+                            {/* Blue: predicted consumption */}
+                            <Area type="monotone" dataKey="predicted" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 3" fill="url(#gradPredicted)" isAnimationActive={false} dot={false} connectNulls={false} />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
             </div>
 
-            <ChartModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Usage Estimate">
+            <ChartModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Usage Estimate — This Month">
                 <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={info?.data ?? []} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                    <AreaChart data={displayData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                         <defs>
-                            <linearGradient id="splitColorModal" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0.5" stopColor="#ec4899" stopOpacity={0.8} />
-                                <stop offset="0.5" stopColor="#3b82f6" stopOpacity={0.8} />
+                            <linearGradient id="gradActualModal" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                            </linearGradient>
+                            <linearGradient id="gradPredictedModal" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
+                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
-                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 14 }} />
-                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 14 }} />
-                        <ReferenceLine x="Current" stroke="#666" strokeDasharray="3 3" />
-                        <Area type="monotone" dataKey="kwh" stroke="none" fill="url(#splitColorModal)" />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 13 }} />
+                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 13 }} tickFormatter={(v) => `${v} kWh`} />
+                        <Tooltip
+                            contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '8px', color: '#fff' }}
+                            formatter={(v: any, name: string | undefined) => [`${Number(v).toFixed(2)} kWh`, name === 'actual' ? 'Actual' : 'Predicted']}
+                            cursor={{ stroke: '#374151', strokeWidth: 1 }}
+                        />
+                        <ReferenceLine x={displayData[Math.ceil(displayData.length * 0.6) - 1]?.name} stroke="#374151" strokeDasharray="4 4" label={{ value: 'Now', fill: '#6b7280', fontSize: 12 }} />
+                        <Area type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2.5} fill="url(#gradActualModal)" isAnimationActive={false} dot={false} connectNulls={false} />
+                        <Area type="monotone" dataKey="predicted" stroke="#3b82f6" strokeWidth={2.5} strokeDasharray="5 3" fill="url(#gradPredictedModal)" isAnimationActive={false} dot={false} connectNulls={false} />
                     </AreaChart>
                 </ResponsiveContainer>
             </ChartModal>

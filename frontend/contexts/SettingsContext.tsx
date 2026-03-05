@@ -13,8 +13,10 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
     const [settings, setSettings] = useState<Settings | null>(null);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         api.settings().then(setSettings).catch(console.error);
     }, []);
 
@@ -32,12 +34,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     };
 
     const formatCurrency = (value: number) => {
-        if (!settings) return `$${value}`; // Fallback to dollar if settings not loaded
+        const safeValue = Number(value) || 0;
 
-        const currencyKey = settings.currency;
-        if (currencyKey.includes('INR')) return `₹${value}`;
-        if (currencyKey.includes('EUR')) return `€${value}`;
-        return `$${value}`; // Default USD
+        // Return default unformatted string if not mounted to avoid hydration mismatch
+        if (!mounted || !settings) return `₹${safeValue.toFixed(2)}`;
+
+        const currencyKey = settings.currency ?? '';
+        if (currencyKey.includes('EUR')) return `€${safeValue.toFixed(2)}`;
+        if (currencyKey.includes('USD')) return `$${safeValue.toFixed(2)}`;
+        return `₹${safeValue.toFixed(2)}`; // Default INR
     };
 
     return (

@@ -59,20 +59,33 @@ function vary(base, pct, seed = 1) {
     return r(base * factor, 2);
 }
 
-/** Build a time-series array for 'TODAY' (24 hourly points) */
-function buildTodayTimeSeries(basePower) {
+/** Global ring buffer — persists across process() calls */
+let todayTimeSeries = null;
+
+/**
+ * Advance the ring buffer by one tick.
+ * Appends the new power reading, shifts off the oldest.
+ * Returns a shallow copy so Recharts always sees a new array reference.
+ */
+function advanceTodayBuffer(currentPower) {
+    if (!todayTimeSeries) {
+        // Bootstrap: fill 60 entries (~2 min of history) so chart is never blank
+        const now = new Date();
+        todayTimeSeries = Array.from({ length: 60 }, (_, i) => {
+            const t = new Date(now.getTime() - (59 - i) * 2000);
+            const label = t.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            // Sine-wave history around 460W so it looks realistic from start
+            const jitter = 460 + Math.sin(i * 0.35) * 50 + (Math.random() * 20 - 10);
+            return { time: label, power: r(jitter, 1) };
+        });
+    }
+
+    const safepower = Math.min(3500, Math.max(50, currentPower));
     const now = new Date();
-    return Array.from({ length: 24 }, (_, h) => {
-        const t = new Date(now);
-        t.setHours(h, 0, 0, 0);
-        const label = t.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-        // Morning and evening peaks
-        const peakFactor = h >= 7 && h <= 9 ? 1.4
-            : h >= 18 && h <= 21 ? 1.6
-                : h >= 1 && h <= 5 ? 0.4
-                    : 1.0;
-        return { time: label, power: vary(basePower * peakFactor, 0.08, h + 1) };
-    });
+    const label = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    todayTimeSeries.shift();
+    todayTimeSeries.push({ time: label, power: r(safepower, 1) });
+    return [...todayTimeSeries];
 }
 
 /** Build a time-series for 'MONTH' (30 daily points) */
@@ -137,8 +150,11 @@ function process(esp) {
     };
 
     // ── Energy Chart (all three range modes) ─────────────────────────────────
+    // IMPORTANT: call advanceTodayBuffer ONCE per tick. Reuse same snapshot for
+    // analytics so the ring buffer doesn't shift twice in one processor call.
+    const todaySnapshot = advanceTodayBuffer(power);
     const energyChart = {
-        TODAY: { range: 'TODAY', data: buildTodayTimeSeries(power) },
+        TODAY: { range: 'TODAY', data: todaySnapshot },
         MONTH: { range: 'MONTH', data: buildMonthTimeSeries(power) },
         YEAR: { range: 'YEAR', data: buildYearTimeSeries(power) },
     };
@@ -206,10 +222,10 @@ function process(esp) {
     };
 
     // ── Analytics ─────────────────────────────────────────────────────────────
-    const peakUsageHours = buildTodayTimeSeries(power)
-        .filter(p => [7, 8, 9, 18, 19, 20, 21].includes(
-            parseInt(p.time.split(':')[0])
-        ))
+    // Reuse the SAME today snapshot — do NOT call advanceTodayBuffer again
+    // The last 7 points of the buffer act as "peak usage" display
+    const peakUsageHours = todaySnapshot
+        .slice(-7)
         .map(p => ({ time: p.time, usage: p.power }));
 
     const monthlyBreakdown = Array.from({ length: 6 }, (_, i) => {
@@ -309,10 +325,13 @@ function process(esp) {
     // ── Rooms page ────────────────────────────────────────────────────────────
     const buildRoomData = (baseKwh, numPoints, labels) => {
         const roomData = {};
-        ROOM_DIST.forEach(rm => {
-            roomData[rm.name] = labels.map((_, i) =>
-                vary(baseKwh * rm.share / numPoints, 0.12, i + rm.share * 1000)
-            );
+        ROOM_DIST.forEach((rm, rIdx) => {
+            const roomSeed = (rIdx + 1) * 137;   // unique prime-spaced seed per room
+            roomData[rm.name] = labels.map((_, i) => {
+                // High variance (0.45) + room-specific seed → full colour spread
+                const raw = vary(baseKwh * rm.share / numPoints, 0.45, i + roomSeed + rm.share * 500);
+                return Math.max(0, r(raw, 3));
+            });
         });
         return {
             rooms: ROOM_DIST.map(r => r.name),

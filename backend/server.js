@@ -12,11 +12,44 @@
 
 'use strict';
 
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const processor = require('./processor');
+const mqtt = require('mqtt');
+const supabase = require('./config/supabase');
+
+const mqttClient = mqtt.connect("mqtt://broker.hivemq.com:1883");
+let latestRealtimeData = [];
+
+mqttClient.on("connect", () => {
+    console.log("[MQTT] Connected to HiveMQ Broker");
+    mqttClient.subscribe("energy/dev_001", (err) => {
+        if (!err) console.log("[MQTT] Subscribed to energy/dev_001");
+    });
+});
+
+mqttClient.on("message", async (topic, message) => {
+    try {
+        const payload = JSON.parse(message.toString());
+
+        // Push locally for quick frontend access if needed
+        latestRealtimeData.push({ ...payload, received_at: Date.now() });
+        if (latestRealtimeData.length > 20) latestRealtimeData.shift();
+
+        // Insert to Supabase Postgres
+        if (supabase) {
+            const { error } = await supabase
+                .from('realtime_energy')
+                .insert([payload]);
+            if (error) console.error('[Supabase Insert Error]:', error);
+        }
+    } catch (e) {
+        console.error('[MQTT Message Parse Error]:', e);
+    }
+});
 
 // ─── Paths ─────────────────────────────────────────────────────────────────
 
@@ -62,6 +95,53 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// ─── Hardware Simulator Loop ─────────────────────────────────────────────────
+// Ornstein-Uhlenbeck mean-reverting random walk — how real stock/power data behaves.
+// Power drifts around a mean (affected by time of day), not pure random chaos.
+const r = (n, d = 2) => Math.round(n * 10 ** d) / 10 ** d; // round helper
+let simV = 230, simC = 2.1, simE = 10.0;
+
+setInterval(() => {
+    const hour = new Date().getHours();
+    // Realistic mean power: high at 7-9am and 6-10pm, low from 1-5am
+    const hourMean = hour >= 7 && hour <= 9 ? 850
+        : hour >= 18 && hour <= 22 ? 1100
+            : hour >= 1 && hour <= 5 ? 200
+                : 480;
+
+    // Ornstein-Uhlenbeck: dX = θ(μ - X)dt + σdW
+    const theta = 0.3;   // mean reversion speed
+    const sigma = 45;    // volatility (watts)
+    const dt = 2;        // seconds per tick
+
+    // Smooth voltage random walk (stays near 230V ±5V)
+    simV = Math.min(245, Math.max(215, simV + (230 - simV) * 0.2 + (Math.random() * 2 - 1)));
+    // Current follows power demand
+    const targetC = (hourMean / simV) / 0.95;  // I = P / (V * PF)
+    simC = Math.min(15, Math.max(0.5, simC + (targetC - simC) * theta * dt + (Math.random() * 0.3 - 0.15) * sigma / simV));
+
+    const p = simV * simC * (0.92 + Math.random() * 0.06); // P = V*I*PF with slight PF variation
+    simE += (p / 3600000) * dt; // Accumulate kWh
+
+    const payload = {
+        device_id: 'esp32_simulated',
+        timestamp: new Date().toISOString(),
+        voltage: r(simV, 2),
+        current: r(simC, 3),
+        power: r(p, 1),
+        energy: r(simE, 4),
+        frequency: 50 + (Math.random() * 0.4 - 0.2),
+        power_factor: r(0.92 + Math.random() * 0.06, 3),
+        temperature: r(30 + Math.sin(Date.now() / 60000) * 3 + (Math.random() * 1 - 0.5), 1),
+        status: 'active',
+    };
+
+    latestRealtimeData.push({ ...payload, received_at: Date.now() });
+    if (latestRealtimeData.length > 20) latestRealtimeData.shift();
+
+    store = processor.process(payload);
+}, 2000);
 
 // ── Auth Routes ──────────────────────────────────────────────────────────────
 
@@ -164,6 +244,11 @@ app.post('/ingest', (req, res) => {
 
 // ── Dashboard routes ──────────────────────────────────────────────────────────
 
+app.get('/customers/:cid', (req, res) => {
+    try { res.json(getCustomer(req.params.cid)); }
+    catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
+});
+
 app.get('/customers/:cid/dashboard/stats', (req, res) => {
     try { res.json(getCustomer(req.params.cid).dashboard.stats); }
     catch (e) { res.status(e.status ?? 500).json({ error: e.message }); }
@@ -208,6 +293,26 @@ app.get('/customers/:cid/dashboard/energy-intensity', (req, res) => {
 });
 
 // ── Analytics ─────────────────────────────────────────────────────────────────
+
+app.get('/realtime-data', async (req, res) => {
+    try {
+        if (supabase) {
+            const { data, error } = await supabase
+                .from('realtime_energy')
+                .select('*')
+                .order('timestamp', { ascending: false })
+                .limit(20);
+
+            if (error) throw error;
+            res.json(data);
+        } else {
+            // Fallback locally if disconnected
+            res.json([...latestRealtimeData].reverse());
+        }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
 
 app.get('/customers/:cid/analytics', (req, res) => {
     try { res.json(getCustomer(req.params.cid).analytics); }

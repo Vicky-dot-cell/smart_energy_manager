@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle2, Zap } from 'lucide-react';
-import { api, type ActivityItem } from '@/lib/api';
+import { type ActivityItem } from '@/lib/api';
+import { useCustomerData } from '@/contexts/CustomerDataContext';
 
 export function RecentActivity() {
-    const [activities, setActivities] = useState<ActivityItem[]>([]);
-
-    useEffect(() => {
-        api.recentActivity().then(setActivities).catch(console.error);
-    }, []);
+    const { data } = useCustomerData();
+    const activities: ActivityItem[] = data?.dashboard?.recentActivity ?? [];
 
     return (
         <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-neutral-800">

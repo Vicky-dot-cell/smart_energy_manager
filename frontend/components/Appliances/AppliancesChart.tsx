@@ -47,41 +47,51 @@ export function AppliancesChart({ context }: { context: TimeContext }) {
     const totalUsage = chartData.reduce((acc, cur) => acc + cur.electricity, 0).toFixed(1);
 
     const getApplianceDetails = (applianceName: string) => {
-        const details: Record<string, { img: string, desc: string, time: string, tip: string, savings: string }> = {
+        const details: Record<string, { img: string, desc: string, time: string, tip: string, savings: string, wattage: string, connectivity: string }> = {
             'Air Conditioner': {
                 img: '/images/appliances/ac.png',
                 desc: 'Inverter Smart AC (1.5 Ton)',
                 time: 'Best used: 10 PM - 6 AM',
                 tip: 'Set temperature to 24°C for optimal balance of comfort and efficiency.',
-                savings: 'Est. savings: ~$15/mo'
+                savings: 'Est. savings: ~$15/mo',
+                wattage: '1500W',
+                connectivity: 'Wi-Fi / ThinQ App'
             },
             'Water Heater': {
                 img: '/images/appliances/heater.png',
                 desc: 'Smart Boiler (25L)',
                 time: 'Best used: 6 AM - 8 AM',
                 tip: 'Turn off when not in use. Lower thermostat to 120°F (49°C).',
-                savings: 'Est. savings: ~$8/mo'
+                savings: 'Est. savings: ~$8/mo',
+                wattage: '2000W Max',
+                connectivity: 'Wi-Fi / Schedule Synth'
             },
             'Refrigerator': {
                 img: '/images/appliances/refrigerator.png',
                 desc: 'Frost-Free Double Door',
                 time: 'Continuous operation',
                 tip: 'Keep coils clean and avoid opening the door frequently.',
-                savings: 'Est. savings: ~$5/mo'
+                savings: 'Est. savings: ~$5/mo',
+                wattage: '150W Avg',
+                connectivity: 'Wi-Fi / Auto-Defrost'
             },
             'Washing Machine': {
                 img: '/images/appliances/washer.png',
                 desc: 'Front Load AI Washer',
                 time: 'Best used: Weekends off-peak',
                 tip: 'Wash full loads in cold water to save up to 90% of energy used.',
-                savings: 'Est. savings: ~$10/mo'
+                savings: 'Est. savings: ~$10/mo',
+                wattage: '500W-1500W',
+                connectivity: 'Wi-Fi / Smart Diag'
             },
             'Lighting': {
                 img: '/images/appliances/lighting.png',
                 desc: 'Smart LED Bulbs',
                 time: '6 PM - 11 PM',
                 tip: 'Use motion sensors or schedules to ensure lights are off in empty rooms.',
-                savings: 'Est. savings: ~$12/mo'
+                savings: 'Est. savings: ~$12/mo',
+                wattage: '9W per bulb',
+                connectivity: 'Zigbee / Voice'
             }
         };
 
@@ -90,7 +100,9 @@ export function AppliancesChart({ context }: { context: TimeContext }) {
             desc: 'Smart Home Appliance',
             time: 'Usage varies',
             tip: 'Optimize usage during off-peak hours.',
-            savings: 'Est. savings: varies'
+            savings: 'Est. savings: varies',
+            wattage: 'Unknown',
+            connectivity: 'Standard'
         };
 
         return details[applianceName] || defaultDetails;
@@ -181,6 +193,10 @@ export function AppliancesChart({ context }: { context: TimeContext }) {
                                 <span className="bg-cyan-500/10 text-cyan-400 text-xs px-2.5 py-1 rounded-full font-medium border border-cyan-500/20">Smart AI Enabled</span>
                             </h4>
                             <p className="text-gray-400 text-sm mt-1">{details.desc}</p>
+                            <div className="flex gap-3 mt-2">
+                                <span className="bg-neutral-800 border border-neutral-700 text-gray-300 text-[10px] uppercase font-semibold px-2 py-1 rounded tracking-wider">{details.wattage}</span>
+                                <span className="bg-neutral-800 border border-neutral-700 text-gray-300 text-[10px] uppercase font-semibold px-2 py-1 rounded tracking-wider">{details.connectivity}</span>
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
@@ -208,6 +224,31 @@ export function AppliancesChart({ context }: { context: TimeContext }) {
                         <p className="text-sm font-medium text-indigo-300">Potential Savings</p>
                         <p className="text-lg font-bold text-indigo-100">{details.savings.split(': ')[1]}</p>
                     </div>
+                </div>
+            )}
+
+            {/* Grid view for all appliances */}
+            {selectedAppliance === 'ALL' && (
+                <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    {['Air Conditioner', 'Water Heater', 'Refrigerator', 'Washing Machine', 'Lighting'].map(name => {
+                        const d = getApplianceDetails(name);
+                        return (
+                            <div
+                                key={name}
+                                onClick={() => setSelectedAppliance(name)}
+                                className="bg-neutral-950/50 p-4 rounded-xl border border-neutral-800 flex flex-col items-center text-center transition-all hover:border-cyan-500/30 hover:bg-neutral-900/80 cursor-pointer group"
+                            >
+                                <div className="w-16 h-16 relative mb-3 bg-neutral-900 rounded-2xl p-2 border border-neutral-800 shadow-sm group-hover:border-cyan-500/40 transition-colors">
+                                    <Image src={d.img} alt={name} fill className="object-contain p-2" />
+                                </div>
+                                <h5 className="text-sm font-semibold text-gray-200 mb-1">{name}</h5>
+                                <p className="text-xs text-gray-500 line-clamp-2 leading-tight flex-1">{d.tip}</p>
+                                <div className="mt-3 w-full bg-indigo-500/10 border border-indigo-500/20 py-1.5 rounded-md text-xs text-indigo-300 font-medium group-hover:bg-indigo-500/20 transition-colors">
+                                    {d.savings.split(': ')[1]} max
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </div>

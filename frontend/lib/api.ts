@@ -110,6 +110,9 @@ export const api = {
             body: JSON.stringify({ consumer_id, new_password })
         }),
 
+    // Master Unified Fetch
+    customerData: (cid = getCustomerId()) => apiFetch<any>(`${base(cid)}`),
+
     // Dashboard
     stats: (cid = getCustomerId()) => apiFetch<DashboardStats>(`${base(cid)}/dashboard/stats`),
     energyChart: (range: Range, cid = getCustomerId()) => apiFetch<{ range: string; data: EnergyPoint[] }>(`${base(cid)}/dashboard/energy-chart?range=${range}`),
